@@ -1,6 +1,11 @@
 name = "surface"
 version = "0.1.0"
 license = "LGPL-3.0-or-later"
+maintainer = ["@awvwgk"]
+author = ["Sebastian Ehlert"]
+description = "Numerical solvent accessible surface area calculation"
+keywords = ["computational-chemistry", "quadrature", "lebedev"]
+copyright = "Copyright 2021 S. Ehlert"
 
 [dependencies]
 mctc-lib.git = "https://github.com/grimme-lab/mctc-lib"
