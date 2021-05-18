@@ -1,0 +1,38 @@
+= numsa(1)
+:doctype: manpage
+
+== Name
+numsa - Numerical evaluation of surface areas
+
+== Synopsis
+*numsa* [_options_] _input_
+
+
+== Description
+
+Calculates the surface area for a molecular structure input.
+
+
+== Options
+
+*--probe* _real_::
+Probe radius for the integration (default: 1.4Å)
+
+*--offset* _real_::
+Offset for the real space cutoff (default: 2.0Å)
+
+*--smoothing* _real_::
+Smoothing parameter for the integration (default: 0.3Å)
+
+*--rad-type* _str_::
+Select van-der-Waals radii (d3, cosmo or bondi)
+
+*-i, --input* _format_::
+Hint for the format of the input file
+
+*--version::
+Print program version and exit
+
+*--help::
+Show this help message
+
