@@ -14,9 +14,14 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with numsa.  If not, see <https://www.gnu.org/licenses/>.
 
-subdir('numsa','sdm')
+subdir('numsa')
 
 srcs += files(
   'numsa.f90',
+)
+
+subdir('sdm')
+
+srcs += files(
   'sdm.f90',
 )
