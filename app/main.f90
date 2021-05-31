@@ -23,11 +23,15 @@ program main_driver
    use numsa, only : get_numsa_version, surface_integrator, new_surface_integrator, &
       & get_vdw_rad_d3, get_vdw_rad_cosmo, get_vdw_rad_bondi
    use numsa_output, only : ascii_surface_area
+   use sdm_init, only: sdm_param, init_sdm
+   use sdm_sigma, only: sdm_surft, calc_surft
+   use sdm_cds, only: calc_cds
    implicit none
    character(len=*), parameter :: prog_name = "numsa"
 
    type :: driver_config
       character(len=:), allocatable :: input
+      character(len=:), allocatable :: solvent
       integer, allocatable :: input_format
       integer, allocatable :: grid_size
       real(wp), allocatable :: probe
@@ -40,7 +44,10 @@ program main_driver
    type(structure_type) :: mol
    type(error_type), allocatable :: error
    type(surface_integrator) :: sasa
+   type(sdm_param) :: param
+   type(sdm_surft) :: surft
    real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :)
+   real(wp) :: cds
    integer :: stat, unit
    logical :: exist
 
@@ -90,6 +97,15 @@ program main_driver
    call sasa%get_surface(mol%id, mol%xyz, surface, dsdr)
 
    call ascii_surface_area(output_unit, mol, surface)
+
+   if (config%solvent .EQ. "h2o") then
+      write(*,*) "---------------------------"
+      Call init_sdm(param)
+      Call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
+      Call calc_cds(surft,surface,mol%sym,mol%id,cds)
+      write(*,*) "G_cds =", cds/1000.0_wp, " [kcal/mol]"
+      write(*,*) "---------------------------"
+   end if
 
 contains
 
@@ -216,6 +232,14 @@ subroutine get_arguments(config, error)
             exit
          end if
          config%input_format = get_filetype("."//arg)
+      case("-s", "--smd")
+         iarg = iarg + 1
+         call get_argument(iarg, arg)
+         if (.not.allocated(arg)) then
+            call fatal_error(error, "Missing argument for Solvent")
+            exit
+         end if
+         config%solvent = arg
       case("--rad-type")
          iarg = iarg + 1
          call get_argument(iarg, arg)
