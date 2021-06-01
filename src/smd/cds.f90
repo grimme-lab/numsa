@@ -2,6 +2,7 @@ module smd_cds
    use smd_sigma, only: smd_surft
    use mctc_env, only: wp
    use mctc_io_symbols, only: to_number
+   use mctc_io_convert, only: autoaa
    implicit none
    private
    
@@ -19,11 +20,11 @@ contains
       type(smd_surft) :: surft
       !>SASA Surface per Atom
       real(wp) :: surface(:)
-      !>Identifiers per Atom as Symbols
+      !>Identifiers per unique species as Symbols
       character(len=*) :: symbols(:)
       !>CDS Part of the Energy
       real(wp) :: cds
-      !>ID of Atom
+      !>ID of the unique species of Atom
       integer :: id(:)
 
       !>CDS Part of the Energy per Atom
@@ -40,7 +41,7 @@ contains
       cds=0.0_wp
       atom_cds=0.0_wp
       do i=1,size(id)
-         atom_cds(i)=surft%sk(Z(i))*surface(i)
+         atom_cds(i)=surft%sk(Z(i))*surface(i)*autoaa**2
       end do
 
       cds=sum(atom_cds)+surft%sm*sum(surface)
@@ -65,7 +66,7 @@ contains
       atom_cds=0.0_wp
 
       do concurrent (i=1:size(surface))
-         atom_cds(i)=surft%sk(numbers(i))*surface(i)
+         atom_cds(i)=surft%sk(numbers(i))*surface(i)*autoaa**2
       end do
 
       cds=sum(atom_cds)+surft%sm*sum(surface)

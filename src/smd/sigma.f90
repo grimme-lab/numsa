@@ -31,7 +31,7 @@ module smd_sigma
 contains
 
    subroutine calc_surft(xyz,species,ident,param,surft)
-      !> Atomic Coordinates of the Solute in bohr [3,nat]
+      !> Atomic Coordinates of the Solute in AA [3,nat]
       real(wp), intent(in) :: xyz(:,:)
       !> Unique Chemical Species in the Solute [nat]
       integer, intent(in) :: species(:)
@@ -50,7 +50,7 @@ contains
       !> Temporary sigma saving
       real(wp) :: s_temp1, s_temp2, s_temp3, s_temp4, nc_temp
       
-      Call init_info(xyz,species,ident,self)
+      Call init_info(species,ident,self)
 
       s_temp1=0.0_wp
       s_temp2=0.0_wp
@@ -157,24 +157,6 @@ contains
 
    end subroutine calc_surft
 
-   !subroutine calc_surft(xyz,n,alpha,beta,surft,arom,fclbr,smd,symbol,zk_in,zkk_in,nc3_in)
-      !!>Atom coordinates of the Solute
-      !real(wp), intent(in) :: xyz(:,:)
-      !!> Refraction index, Abrahams hydrogen bond accidity and Abrahams hydrogen bond basicity of the Solvent
-      !real(wp), intent(in) :: n, alpha, beta
-      !!> macroscopic surface tension, fraction of aromatic atoms and fraction of f,cl and br of the solvent
-      !real(wp), intent(in) :: surft,arom,fclbr
-      !!> Self defined Parameter for the smd
-      !real(wp), intent(in), optional :: zk_in(:), zkk_in(:,:),nc3_in
-      !!> Symbols for self defined Parameters
-      !character(len=*), intent(in), optional :: symbol
-      !!> smd Parameters
-      !type(smd_surft), intent(out) :: smd
-
-      !Call init_default(.false.)
-
-
-   !end subroutine init_smd
 
    function T(xyz1,xyz2,rzkk,drzkk)
       !>Atom coordinates xyz [3]
@@ -190,7 +172,7 @@ contains
       !>Temporary for denominator
       real(wp) :: denom
 
-      R=sqrt((xyz1(1)-xyz2(1))**2+(xyz1(2)-xyz2(2))**2+(xyz1(3)-xyz2(2))**2)**autoaa
+      R=sqrt((xyz1(1)-xyz2(1))**2+(xyz1(2)-xyz2(2))**2+(xyz1(3)-xyz2(2))**2)
 
       if (R .LT. (rzkk+drzkk)) then
          denom=R-drzkk-rzkk
@@ -201,9 +183,7 @@ contains
 
    end function T
 
-   subroutine init_info(xyz,species,ident,self)
-      !> Atomic Coordinates of the Solute [3,nat]
-      real(wp), intent(in) :: xyz(:,:)
+   subroutine init_info(species,ident,self)
       !> Unique Chemical Species in the Solute [nat]
       integer, intent(in) :: species(:)
       !> Identifier (Element Symbol) of the unique chemical species in the solute [nat]
