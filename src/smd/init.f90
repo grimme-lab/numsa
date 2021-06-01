@@ -1,8 +1,8 @@
-module sdm_init
+module smd_init
 
 !--------------------------------------------------------------------------------!
 !--------------------------------------------------------------------------------!
-!-----               This Module initiates the SDM Parameters               -----!
+!-----               This Module initiates the smd Parameters               -----!
 !-----              Own Parameters need to be added as follows:             -----!
 !-----                                                                      -----!
 !-----                             Symbol zk                                -----!
@@ -21,11 +21,11 @@ module sdm_init
    use mctc_io_convert, only : aatoau, autoaa
    implicit none
    private
-   public :: init_sdm, sdm_param
+   public :: init_smd, smd_param
 
    integer, parameter :: max_elem = 94
    
-   type :: sdm_param
+   type :: smd_param
       !> Element dependent Parameters
       real(wp) :: zk(3,max_elem)
       !> Pair/Solvent dependent Parameters
@@ -37,7 +37,7 @@ module sdm_init
       real(wp) :: nc3
       real(wp) :: rnc3
       real(wp) :: drnc3
-   end type sdm_param
+   end type smd_param
 
  
    real(wp) :: ref_zk_h2o(max_elem)
@@ -52,20 +52,20 @@ module sdm_init
 
    real(wp) :: ref_nc3, ref_rnc3, ref_drnc3
 
-   interface init_sdm
-      module procedure :: init_sdm_h2o
-   !   module procedure :: init_sdm
+   interface init_smd
+      module procedure :: init_smd_h2o
+   !   module procedure :: init_smd
    end interface
 
 contains
 
-   subroutine init_sdm_h2o(param,symbol,zk_in,zkk_in,nc3_in)
-      !> Self defined Parameter for the SDM
+   subroutine init_smd_h2o(param,symbol,zk_in,zkk_in,nc3_in)
+      !> Self defined Parameter for the smd
       real(wp), intent(in), optional :: zk_in(:), zkk_in(:,:), nc3_in
       !> Symbols for self defined Parameters
       character(len=*), intent(in), optional :: symbol
-      !> SDM Parameters
-      type(sdm_param), intent(out) :: param
+      !> smd Parameters
+      type(smd_param), intent(out) :: param
 
       !> Local Variables
       !> Working Parameters
@@ -84,13 +84,13 @@ contains
             end if
          else
             write(*,*) "Self defined Zk Parameters given, but no Zkk Parameters. &
-               &Ignoring the Zk Input and using default SDM Parameters instead."
+               &Ignoring the Zk Input and using default smd Parameters instead."
             zk=ref_zk_h2o
             zkk=ref_zkk_h2o
             nc3=ref_nc3
          end if
       else
-         write(*,*) "Using default SDM Parameters."
+         write(*,*) "Using default smd Parameters."
          param%zk(1,:)=ref_zk_h2o
          param%zkk(1,:,:)=ref_zkk_h2o
          param%rzkk=ref_rzkk
@@ -100,32 +100,32 @@ contains
          param%drnc3=ref_drnc3
       end if
       
-   end subroutine init_sdm_h2o
+   end subroutine init_smd_h2o
 
-   !subroutine init_sdm(xyz,n,alpha,beta,surft,arom,fclbr,sdm,symbol,zk_in,zkk_in,nc3_in)
+   !subroutine init_smd(xyz,n,alpha,beta,surft,arom,fclbr,smd,symbol,zk_in,zkk_in,nc3_in)
       !!>Atom coordinates of the Solute
       !real(wp), intent(in) :: xyz(:,:)
       !!> Refraction index, Abrahams hydrogen bond accidity and Abrahams hydrogen bond basicity of the Solvent
       !real(wp), intent(in) :: n, alpha, beta
       !!> macroscopic surface tension, fraction of aromatic atoms and fraction of f,cl and br of the solvent
       !real(wp), intent(in) :: surft,arom,fclbr
-      !!> Self defined Parameter for the SDM
+      !!> Self defined Parameter for the smd
       !real(wp), intent(in), optional :: zk_in(:), zkk_in(:,:),nc3_in
       !!> Symbols for self defined Parameters
       !character(len=*), intent(in), optional :: symbol
-      !!> SDM Parameters
-      !type(sdm_surft), intent(out) :: sdm
+      !!> smd Parameters
+      !type(smd_surft), intent(out) :: smd
 
       !Call init_default(.false.)
 
 
-   !end subroutine init_sdm
+   !end subroutine init_smd
 
    subroutine init_default(h2o)
       !>Init H2O defaults?
       logical, intent(in) :: h2o
 
-      !Default SDM Parameters taken from:
+      !Default smd Parameters taken from:
       !Aleksandr V. Marenich, Christopher J. Cramer, and Donald G. Truhlar
       !The Journal of Physical Chemistry B 2009 113 (18), 6378-6396
       !DOI: 10.1021/jp810292n
@@ -195,4 +195,4 @@ contains
       ref_drnc3=0.065_wp !Special nc3 Parameter
    end subroutine init_default
 
-end module sdm_init
+end module smd_init

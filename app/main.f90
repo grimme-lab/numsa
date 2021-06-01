@@ -23,9 +23,9 @@ program main_driver
    use numsa, only : get_numsa_version, surface_integrator, new_surface_integrator, &
       & get_vdw_rad_d3, get_vdw_rad_cosmo, get_vdw_rad_bondi
    use numsa_output, only : ascii_surface_area
-   use sdm_init, only: sdm_param, init_sdm
-   use sdm_sigma, only: sdm_surft, calc_surft
-   use sdm_cds, only: calc_cds
+   use smd_init, only: smd_param, init_smd
+   use smd_sigma, only: smd_surft, calc_surft
+   use smd_cds, only: calc_cds
    implicit none
    character(len=*), parameter :: prog_name = "numsa"
 
@@ -44,8 +44,8 @@ program main_driver
    type(structure_type) :: mol
    type(error_type), allocatable :: error
    type(surface_integrator) :: sasa
-   type(sdm_param) :: param
-   type(sdm_surft) :: surft
+   type(smd_param) :: param
+   type(smd_surft) :: surft
    real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :)
    real(wp) :: cds
    integer :: stat, unit
@@ -100,7 +100,7 @@ program main_driver
 
    if (config%solvent .EQ. "h2o") then
       write(*,*) "---------------------------"
-      Call init_sdm(param)
+      Call init_smd(param)
       Call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
       Call calc_cds(surft,surface,mol%sym,mol%id,cds)
       write(*,*) "G_cds =", cds/1000.0_wp, " [kcal/mol]"

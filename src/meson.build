@@ -20,8 +20,8 @@ srcs += files(
   'numsa.f90',
 )
 
-subdir('sdm')
+subdir('smd')
 
 srcs += files(
-  'sdm.f90',
+  'smd.f90',
 )

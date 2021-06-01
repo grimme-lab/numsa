@@ -1,11 +1,11 @@
-module sdm_sigma
-   use sdm_init, only: sdm_param
+module smd_sigma
+   use smd_init, only: smd_param
    use mctc_env, only: wp
    use mctc_io_symbols, only: to_number
    use mctc_io_convert, only: autoaa
    implicit none
    private
-   public :: calc_surft, sdm_surft
+   public :: calc_surft, smd_surft
 
    integer, parameter :: max_elem=94
 
@@ -14,14 +14,14 @@ module sdm_sigma
       !module procedure :: calc_surft
    end interface
 
-   type :: sdm_info
+   type :: smd_info
       !> Number of Atoms in the Solute
       integer :: nat
       !> Identifier of Atom i
       integer, allocatable :: Z(:)
-   end type sdm_info
+   end type smd_info
 
-   type :: sdm_surft
+   type :: smd_surft
       !> Atom depended surface tension
       real(wp) :: sk(max_elem)
       !> Solvent depended molecular surface tension
@@ -37,14 +37,14 @@ contains
       integer, intent(in) :: species(:)
       !> Identifier (Element Symbol) of the unique chemical species in the solute [nat]
       character(len=*), intent(in) :: ident(:)
-      !> SDM Parameters
-      type(sdm_param), intent(in) :: param
-      !> SDM Surft Output
-      type(sdm_surft), intent(out) :: surft
+      !> smd Parameters
+      type(smd_param), intent(in) :: param
+      !> smd Surft Output
+      type(smd_surft), intent(out) :: surft
 
       !> Local Variables
-      !> Needed Info for sdm
-      type(sdm_info) :: self
+      !> Needed Info for smd
+      type(smd_info) :: self
       !> Laufvariabeln
       integer :: Z, i, j, k
       !> Temporary sigma saving
@@ -157,24 +157,24 @@ contains
 
    end subroutine calc_surft_h2o
 
-   !subroutine calc_surft(xyz,n,alpha,beta,surft,arom,fclbr,sdm,symbol,zk_in,zkk_in,nc3_in)
+   !subroutine calc_surft(xyz,n,alpha,beta,surft,arom,fclbr,smd,symbol,zk_in,zkk_in,nc3_in)
       !!>Atom coordinates of the Solute
       !real(wp), intent(in) :: xyz(:,:)
       !!> Refraction index, Abrahams hydrogen bond accidity and Abrahams hydrogen bond basicity of the Solvent
       !real(wp), intent(in) :: n, alpha, beta
       !!> macroscopic surface tension, fraction of aromatic atoms and fraction of f,cl and br of the solvent
       !real(wp), intent(in) :: surft,arom,fclbr
-      !!> Self defined Parameter for the SDM
+      !!> Self defined Parameter for the smd
       !real(wp), intent(in), optional :: zk_in(:), zkk_in(:,:),nc3_in
       !!> Symbols for self defined Parameters
       !character(len=*), intent(in), optional :: symbol
-      !!> SDM Parameters
-      !type(sdm_surft), intent(out) :: sdm
+      !!> smd Parameters
+      !type(smd_surft), intent(out) :: smd
 
       !Call init_default(.false.)
 
 
-   !end subroutine init_sdm
+   !end subroutine init_smd
 
    function T(xyz1,xyz2,rzkk,drzkk)
       !>Atom coordinates xyz [3]
@@ -209,7 +209,7 @@ contains
       !> Identifier (Element Symbol) of the unique chemical species in the solute [nat]
       character(len=*), intent(in) :: ident(:)
       !> Output Info
-      type(sdm_info) :: self
+      type(smd_info) :: self
 
       !> Laufvariable
       integer :: elem
@@ -223,4 +223,4 @@ contains
       
 
 
-end module sdm_sigma
+end module smd_sigma

@@ -1,5 +1,5 @@
-module sdm_cds
-   use sdm_sigma, only: sdm_surft
+module smd_cds
+   use smd_sigma, only: smd_surft
    use mctc_env, only: wp
    use mctc_io_symbols, only: to_number
    implicit none
@@ -12,8 +12,8 @@ module sdm_cds
 contains
 
    subroutine calc_cds_symbol(surft,surface,symbols,id,cds)
-      !>SDM Surface Tensions per Atom and for the Solvent
-      type(sdm_surft) :: surft
+      !>smd Surface Tensions per Atom and for the Solvent
+      type(smd_surft) :: surft
       !>SASA Surface per Atom
       real(wp) :: surface(:)
       !>Identifiers per Atom as Symbols
@@ -44,8 +44,8 @@ contains
    end subroutine calc_cds_symbol
          
    subroutine calc_cds_number(surft,surface,numbers,cds)
-      !>SDM Surface Tensions per Atom and for the Solvent
-      type(sdm_surft) :: surft
+      !>smd Surface Tensions per Atom and for the Solvent
+      type(smd_surft) :: surft
       !>SASA Surface per Atom
       real(wp) :: surface(:)
       !>Identifiers per Atom as Numbers
@@ -69,4 +69,4 @@ contains
    end subroutine calc_cds_number
 
 
-end module sdm_cds
+end module smd_cds

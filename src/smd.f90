@@ -15,11 +15,11 @@
 ! along with numsa.  If not, see <https://www.gnu.org/licenses/>.
 
 !> Public API of the numsa library
-module sdm
-   use sdm_init, only: init_sdm, sdm_param
-   use sdm_sigma, only: calc_surft, sdm_surft
-   use sdm_cds, only: calc_cds
+module smd
+   use smd_init, only: init_smd, smd_param
+   use smd_sigma, only: calc_surft, smd_surft
+   use smd_cds, only: calc_cds
    implicit none
    public
 
-end module sdm
+end module smd
