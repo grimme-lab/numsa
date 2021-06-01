@@ -9,10 +9,10 @@ module smd_sigma
 
    integer, parameter :: max_elem=94
 
-   interface calc_surft
-      module procedure :: calc_surft_h2o
-      !module procedure :: calc_surft
-   end interface
+   !interface calc_surft
+      !module procedure :: calc_surft_h2o
+      !!module procedure :: calc_surft
+   !end interface
 
    type :: smd_info
       !> Number of Atoms in the Solute
@@ -30,7 +30,7 @@ module smd_sigma
 
 contains
 
-   subroutine calc_surft_h2o(xyz,species,ident,param,surft)
+   subroutine calc_surft(xyz,species,ident,param,surft)
       !> Atomic Coordinates of the Solute in bohr [3,nat]
       real(wp), intent(in) :: xyz(:,:)
       !> Unique Chemical Species in the Solute [nat]
@@ -58,7 +58,7 @@ contains
       s_temp4=0.0_wp
       nc_temp=0.0_wp
 
-      surft%sm=0.0_wp !For H2O, sm is zero
+      surft%sm=param%s_m
  
       ! Setting up s_k Parameters now
       do Z=1,max_elem
@@ -78,7 +78,7 @@ contains
                      end do
                   end if
                end do
-               surft%sk(1)=param%zk(1,1)+param%zkk(1,1,6)*s_temp1+param%zkk(1,1,8)*s_temp2
+               surft%sk(1)=param%zk(1)+param%zkk(1,6)*s_temp1+param%zkk(1,8)*s_temp2
                s_temp1=0.0_wp
                s_temp2=0.0_wp
             case (6) !C
@@ -96,7 +96,7 @@ contains
                      end do
                   end if
                end do
-               surft%sk(6)=param%zk(1,6)+param%zkk(1,6,6)*s_temp1+param%zkk(1,6,7)*(s_temp2**2)
+               surft%sk(6)=param%zk(6)+param%zkk(6,6)*s_temp1+param%zkk(6,7)*(s_temp2**2)
                s_temp1=0.0_wp
                s_temp2=0.0_wp
             case(7) !N
@@ -120,7 +120,7 @@ contains
                      end do
                   end if
                end do
-               surft%sk(7)=param%zk(1,7)+param%zkk(1,7,6)*(s_temp1**1.3_wp)+param%nc3*s_temp2
+               surft%sk(7)=param%zk(7)+param%zkk(7,6)*(s_temp1**1.3_wp)+param%nc3*s_temp2
                s_temp1=0.0_wp
                s_temp2=0.0_wp
             case(8) !O
@@ -142,20 +142,20 @@ contains
                      end do
                   end if
                end do
-               surft%sk(8)=param%zk(1,8)+param%zkk(1,8,6)*s_temp1+param%zkk(1,8,7)&
-                  &*s_temp2+param%zkk(1,8,8)*s_temp3+param%zkk(1,8,15)*s_temp4
+               surft%sk(8)=param%zk(8)+param%zkk(8,6)*s_temp1+param%zkk(8,7)&
+                  &*s_temp2+param%zkk(8,8)*s_temp3+param%zkk(8,15)*s_temp4
                s_temp1=0.0_wp
                s_temp2=0.0_wp
                s_temp3=0.0_wp
                s_temp4=0.0_wp
             case(9,14,16,17,35) !F, Si, S, Cl, Br
-               surft%sk(Z)=param%zk(1,Z)
+               surft%sk(Z)=param%zk(Z)
             case default
                surft%sk(Z)=0.0_wp !The default case for the surface tension is zero
          end select
       end do
 
-   end subroutine calc_surft_h2o
+   end subroutine calc_surft
 
    !subroutine calc_surft(xyz,n,alpha,beta,surft,arom,fclbr,smd,symbol,zk_in,zkk_in,nc3_in)
       !!>Atom coordinates of the Solute

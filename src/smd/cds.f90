@@ -3,6 +3,9 @@ module smd_cds
    use mctc_env, only: wp
    use mctc_io_symbols, only: to_number
    implicit none
+   private
+   
+   public :: calc_cds
 
    interface calc_cds
       module procedure :: calc_cds_symbol

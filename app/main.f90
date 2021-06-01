@@ -98,9 +98,9 @@ program main_driver
 
    call ascii_surface_area(output_unit, mol, surface)
 
-   if (config%solvent .EQ. "h2o") then
+   if (allocated(config%solvent)) then
       write(*,*) "---------------------------"
-      Call init_smd(param)
+      Call init_smd(param,config%solvent)
       Call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
       Call calc_cds(surft,surface,mol%sym,mol%id,cds)
       write(*,*) "G_cds =", cds/1000.0_wp, " [kcal/mol]"

@@ -18,4 +18,5 @@ srcs += files(
   'sigma.f90',
   'init.f90',
   'cds.f90',
+  'io.f90',
 )
