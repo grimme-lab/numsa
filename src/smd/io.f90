@@ -37,6 +37,8 @@ contains
          error stop
       end if
 
+      close(1)
+
    end subroutine read_solvent_properties
 
 

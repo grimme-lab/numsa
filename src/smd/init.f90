@@ -87,6 +87,12 @@ contains
       select case(solvent)
          case('h2o', 'water')
             Call init_smd_h2o(param)
+         case('methanol','ch4')
+            Call init_smd_ot(param,1.3314_wp,0.43_wp,0.47_wp,32.3847_wp,0.0_wp,0.0_wp)
+         case('dmso','DMSO')
+            Call init_smd_ot(param,1.4772_wp,0.0_wp,0.88_wp,62.6680_wp,0.0_wp,0.0_wp)
+         case('acetonitrile')
+            Call init_smd_ot(param,1.3421_wp,0.07_wp,0.32_wp,28.4000_wp,0.0_wp,0.0_wp)
          case default
             INQUIRE(file=solvent//".prop",exist=ex)
             if (ex) then
