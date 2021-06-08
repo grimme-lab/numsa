@@ -3,17 +3,51 @@ module smd_init
 !--------------------------------------------------------------------------------!
 !--------------------------------------------------------------------------------!
 !-----               This Module initiates the smd Parameters               -----!
+!-----            Parameter files need to be appropriately named.           -----!
+!-----              h2o: smd_h2o           other solvents: smd_ot           -----!
 !-----              Own Parameters need to be added as follows:             -----!
-!-----                                                                      -----!
-!-----                             Symbol zk                                -----!
-!-----                             Symbol zk                                -----!
-!-----                             Symbol zk                                -----!
-!-----                             #Zkk Matrix                              -----!
+!-----                            #Zk                                       -----!
+!-----                            Symbol zk                                 -----!
+!-----                            Symbol zk                                 -----!
+!-----                            Symbol zk                                 -----!
+!-----                            #Zk2 (not for h2o)                        -----!
+!-----                            Symbol zk                                 -----!
+!-----                            Symbol zk                                 -----!
+!-----                            Symbol zk                                 -----!
+!-----                            #Zk3 (not for h2o)                        -----!
+!-----                            Symbol zk                                 -----!
+!-----                            Symbol zk                                 -----!
+!-----                            Symbol zk                                 -----!
+!-----                            #Zkk Matrix                               -----!
 !----- Do not add this line!            Symbol Symbol Symbol                -----!
 !-----                            Symbol zkk    zkk    zkk                  -----!
 !-----                            Symbol zkk    zkk    zkk                  -----!
 !-----                            Symbol zkk    zkk    zkk                  -----! 
-!-----                            #NC3=nc3                                  -----!
+!-----                            #Zkk Matrix 2 (not for h2o)               -----!
+!-----                            Symbol zkk    zkk    zkk                  -----!
+!-----                            Symbol zkk    zkk    zkk                  -----!
+!-----                            Symbol zkk    zkk    zkk                  -----! 
+!-----                            #Zkk Matrix 3 (not for h2o)               -----!
+!-----                            Symbol zkk    zkk    zkk                  -----!
+!-----                            Symbol zkk    zkk    zkk                  -----!
+!-----                            Symbol zkk    zkk    zkk                  -----! 
+!-----                            #rzkk Matrix                              -----!
+!-----                            Symbol rzkk   rzkk   rzkk                 -----!
+!-----                            Symbol rzkk   rzkk   rzkk                 -----!
+!-----                            Symbol rzkk   rzkk   rzkk                 -----! 
+!-----                            #drzkk Matrix                              -----!
+!-----                            Symbol rzkk   rzkk   rzkk                 -----!
+!-----                            Symbol rzkk   rzkk   rzkk                 -----!
+!-----                            Symbol rzkk   rzkk   rzkk                 -----! 
+!-----                            #NC3                                      -----!
+!-----                            nc3                                       -----!
+!-----                            rnc3                                      -----!
+!-----                            drnc3                                     -----!
+!-----                            #Solvent (not for h2o)                    -----!
+!-----                            s_g                                       -----!
+!-----                            s_r2                                      -----!
+!-----                            s_p2                                      -----!
+!-----                            s_b2                                      -----!
 !--------------------------------------------------------------------------------!
 !--------------------------------------------------------------------------------!
    use mctc_env, only : wp
@@ -55,22 +89,22 @@ module smd_init
 
    real(wp) :: ref_nc3, ref_rnc3, ref_drnc3
 
-   real(wp), parameter :: ref_sg=0.35_wp
+   real(wp) :: ref_sg
 
-   real(wp), parameter :: ref_sr2=-4.19_wp
+   real(wp) :: ref_sr2
 
-   real(wp), parameter :: ref_sp2=-6.68_wp
+   real(wp) :: ref_sp2
 
-   real(wp), parameter :: ref_sb2=0.00_wp
+   real(wp) :: ref_sb2
 
-   !interface init_smd
-      !module procedure :: init_smd_h2o
-      !module procedure :: init_smd
-   !end interface
+   interface init_smd
+      module procedure :: init_smd_def
+      module procedure :: init_smd_self
+   end interface
 
 contains
 
-   subroutine init_smd(param,solvent)
+   subroutine init_smd_def(param,solvent)
       !>Solvent Name
       character(len=*), intent(in) :: solvent
       !>Output Parameters
@@ -105,11 +139,52 @@ contains
             end if
       end select
 
-   end subroutine init_smd
+   end subroutine init_smd_def
 
-   subroutine init_smd_h2o(param)
+   subroutine init_smd_self(param,solvent,hd)
+      !>Solvent Name
+      character(len=*), intent(in) :: solvent
+      !>Output Parameters
+      type(smd_param), intent(out) :: param
+      !>Home Directory for self defined Solvent Parameters
+      character(len=*), intent(in) :: hd
+
+      !>Local Variables
+      !>Are there Solvent Properties for the Solvent?
+      logical :: ex
+      !> Variables for Solvent Properties
+      real(wp) :: n,alpha,beta,msurft,arom,fclbr
+
+      ex=.false.
+
+      select case(solvent)
+         case('h2o', 'water')
+            Call init_smd_h2o(param,hd)
+         case('methanol','ch4')
+            Call init_smd_ot(param,1.3314_wp,0.43_wp,0.47_wp,32.3847_wp,0.0_wp,0.0_wp,hd)
+         case('dmso','DMSO')
+            Call init_smd_ot(param,1.4772_wp,0.0_wp,0.88_wp,62.6680_wp,0.0_wp,0.0_wp,hd)
+         case('acetonitrile')
+            Call init_smd_ot(param,1.3421_wp,0.07_wp,0.32_wp,28.4000_wp,0.0_wp,0.0_wp,hd)
+         case default
+            INQUIRE(file=solvent//".prop",exist=ex)
+            if (ex) then
+               write(*,*) 'Reading self defined solvent properties for ', solvent,'.'
+               Call read_smd(solvent//".prop",n,alpha,beta,msurft,arom,fclbr)
+               Call init_smd_ot(param,n,alpha,beta,msurft,arom,fclbr,hd)
+            else
+               write(*,*) 'No Solvent Properties for ', solvent, '.'
+               stop
+            end if
+      end select
+
+   end subroutine init_smd_self
+
+   subroutine init_smd_h2o(param,hd)
       !> smd Parameters
       type(smd_param), intent(out) :: param
+      !> Home Directory for self defined SMD Parameters
+      character(len=*),intent(in), optional :: hd
 
       !> Local Variables
       !> Working Parameters
@@ -119,33 +194,49 @@ contains
       !> Is there a self defined Parameter file?
       logical :: ex
 
-      Inquire(file='smd_h2o.param',exist=ex)
 
+      Inquire(file="smd_h2o",exist=ex)
       if (ex) then
-         write(*,*) 'Self defined smd Parameters not implemented yet.'
-         stop
+         write(*,*) "Using smd_h2o from working directory."
+         Call read_smd("smd_h2o",ref_zk_h2o,ref_zkk_h2o,ref_rzkk,ref_drzkk,&
+               &ref_nc3,ref_rnc3,ref_drnc3)
       else
-         write(*,*) "Using default smd Parameters."
-         Call init_default(.TRUE.)
-         param%zk(:)=ref_zk_h2o
-         param%zkk(:,:)=ref_zkk_h2o
-         param%rzkk=ref_rzkk
-         param%drzkk=ref_drzkk
-         param%nc3=ref_nc3
-         param%rnc3=ref_rnc3
-         param%drnc3=ref_drnc3
-         param%s_m=0.0_wp !For H2O, sm is zero
+         if (present(hd)) then
+            Inquire(file=hd//"smd_h2o",exist=ex)
+               if (ex) then
+                  write(*,*) "Using smd_h2o from home directory: "//hd//"."
+                  Call read_smd(hd//"smd_h2o",ref_zk_h2o,ref_zkk_h2o,ref_rzkk,ref_drzkk,&
+                  &ref_nc3,ref_rnc3,ref_drnc3)
+               else
+                  write(*,*) "Using default SMD Parameters."
+                  Call init_default(.TRUE.)
+               end if
+         else
+            write(*,*) "Using default SMD Parameters."
+            Call init_default(.TRUE.)
+         end if
       end if
+
       
+      param%zk(:)=ref_zk_h2o
+      param%zkk(:,:)=ref_zkk_h2o
+      param%rzkk=ref_rzkk
+      param%drzkk=ref_drzkk
+      param%nc3=ref_nc3
+      param%rnc3=ref_rnc3
+      param%drnc3=ref_drnc3
+      param%s_m=0.0_wp !For H2O, sm is zero
    end subroutine init_smd_h2o
 
-   subroutine init_smd_ot(param,n,alpha,beta,msurft,arom,fclbr)
+   subroutine init_smd_ot(param,n,alpha,beta,msurft,arom,fclbr,hd)
       !> Refraction index, Abrahams hydrogen bond accidity and Abrahams hydrogen bond basicity of the Solvent
       real(wp), intent(in) :: n, alpha, beta
       !> macroscopic surface tension, fraction of aromatic atoms and fraction of f,cl and br of the solvent
       real(wp), intent(in) :: msurft,arom,fclbr
       !> smd Parameters
       type(smd_param), intent(out) :: param
+      !> Home directory for self defined SMD Parameters
+      character(len=*),intent(in), optional :: hd
 
       !> Local Variables
       !> Is there a self defined Parameter file?
@@ -153,27 +244,40 @@ contains
       !> Laufvariable
       integer :: Z,Z2
 
-      Inquire(file='smd_ot.param',exist=ex)
-      
+      Inquire(file="smd_ot",exist=ex)
       if (ex) then
-         write(*,*) 'Self defined smd Parameters not implemented yet.'
-         stop
+         write(*,*) "Using smd_ot from working directory."
+            Call read_smd(hd//"smd_ot",ref_zk,ref_zkk,ref_rzkk,ref_drzkk,&
+               &ref_nc3,ref_rnc3,ref_drnc3,ref_sg,ref_sr2,ref_sp2,ref_sb2)
       else
-         Call init_default(.false.)
-         do Z=1,max_elem
-            param%zk(Z)=ref_zk(1,Z)*n+ref_zk(2,Z)*alpha+ref_zk(3,Z)*beta
-            do Z2=1,max_elem
-               param%zkk(Z,Z2)=ref_zkk(1,Z,Z2)*n+ref_zkk(2,Z,Z2)*alpha+ref_zkk(3,Z,Z2)*beta
-            end do
-         end do
-         param%s_m=ref_sg*msurft+ref_sr2*(arom**2)+ref_sp2*(fclbr**2)+ref_sb2*(beta**2)
-         param%rzkk=ref_rzkk
-         param%drzkk=ref_drzkk
-         param%nc3=ref_nc3
-         param%rnc3=ref_rnc3
-         param%drnc3=ref_drnc3
+         if (present(hd)) then
+            Inquire(file=hd//"smd_ot",exist=ex)
+               if (ex) then
+                  write(*,*) "Using smd_ot from home directory: "//hd//"."
+                  Call read_smd(hd//"smd_ot",ref_zk,ref_zkk,ref_rzkk,ref_drzkk,&
+                     &ref_nc3,ref_rnc3,ref_drnc3,ref_sg,ref_sr2,ref_sp2,ref_sb2)
+               else
+                  write(*,*) "Using default SMD Parameters."
+                  Call init_default(.TRUE.)
+               end if
+         else
+            write(*,*) "Using default SMD Parameters."
+            Call init_default(.TRUE.)
+         end if
       end if
 
+      do Z=1,max_elem
+         param%zk(Z)=ref_zk(1,Z)*n+ref_zk(2,Z)*alpha+ref_zk(3,Z)*beta
+         do Z2=1,max_elem
+            param%zkk(Z,Z2)=ref_zkk(1,Z,Z2)*n+ref_zkk(2,Z,Z2)*alpha+ref_zkk(3,Z,Z2)*beta
+         end do
+      end do
+      param%s_m=ref_sg*msurft+ref_sr2*(arom**2)+ref_sp2*(fclbr**2)+ref_sb2*(beta**2)
+      param%rzkk=ref_rzkk
+      param%drzkk=ref_drzkk
+      param%nc3=ref_nc3
+      param%rnc3=ref_rnc3
+      param%drnc3=ref_drnc3
 
    end subroutine init_smd_ot
 
@@ -281,6 +385,11 @@ contains
       ref_drzkk(8,8)=0.3_wp !O,O
       ref_drzkk(8,15)=0.3_wp !O,P
       ref_drnc3=0.065_wp !Special nc3 Parameter
-   end subroutine init_default
 
+      ref_sg=0.35_wp
+      ref_sr2=-4.19_wp
+      ref_sp2=-6.68_wp
+      ref_sb2=0.00_wp
+   end subroutine init_default
 end module smd_init
+               
