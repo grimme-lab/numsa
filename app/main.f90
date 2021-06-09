@@ -26,6 +26,7 @@ program main_driver
    use smd_init, only: smd_param, init_smd
    use smd_sigma, only: smd_surft, calc_surft
    use smd_cds, only: calc_cds
+   use smd_output, only: ascii_cds
    implicit none
    character(len=*), parameter :: prog_name = "numsa"
 
@@ -46,8 +47,7 @@ program main_driver
    type(surface_integrator) :: sasa
    type(smd_param) :: param
    type(smd_surft) :: surft
-   real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :)
-   real(wp) :: cds
+   real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :), cds(:)
    integer :: stat, unit
    logical :: exist
 
@@ -99,12 +99,10 @@ program main_driver
    call ascii_surface_area(output_unit, mol, surface)
 
    if (allocated(config%solvent)) then
-      write(*,*) "---------------------------"
       Call init_smd(param,config%solvent)
       Call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
       Call calc_cds(surft,surface,mol%sym,mol%id,cds)
-      write(*,*) "G_cds =", cds/1000.0_wp, " [kcal/mol]"
-      write(*,*) "---------------------------"
+      Call ascii_cds(output_unit,mol,cds)
    end if
 
 contains

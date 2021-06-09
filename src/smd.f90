@@ -19,6 +19,7 @@ module smd
    use smd_init, only: init_smd, smd_param
    use smd_sigma, only: calc_surft, smd_surft
    use smd_cds, only: calc_cds
+   use smd_output, only: ascii_cds
    implicit none
    public
 

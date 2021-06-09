@@ -19,4 +19,5 @@ srcs += files(
   'init.f90',
   'cds.f90',
   'io.f90',
+  'output.f90'
 )
