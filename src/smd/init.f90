@@ -273,11 +273,11 @@ contains
                      &ref_nc3,ref_rnc3,ref_drnc3,ref_sg,ref_sr2,ref_sp2,ref_sb2)
                else
                   ! write(*,*) "Using default SMD Parameters."
-                  Call init_default(.TRUE.)
+                  Call init_default(.FALSE.)
                end if
          else
             ! write(*,*) "Using default SMD Parameters."
-            Call init_default(.TRUE.)
+            Call init_default(.FALSE.)
          end if
       end if
 
@@ -313,15 +313,15 @@ contains
          ref_zk_h2o(9)=38.18_wp !F
          ref_zk_h2o(17)=9.82_wp !Cl
          ref_zk_h2o(35)=-8.72_wp !Br
-         ref_zk_h2o(16)=-9.10 !S
+         ref_zk_h2o(16)=-9.10_wp !S
          !> Surface Tension for Atom-Atom Interactions
          ref_zkk_h2o=0.0_wp !Parameters that are not defined are zero
          ref_zkk_h2o(1,6)=-60.77_wp !H,C
          ref_zkk_h2o(6,6)=-72.95_wp !C,C
          ref_zkk_h2o(8,6)=68.69_wp !O,C
          ref_zkk_h2o(7,6)=-48.22_wp !N,C
-         ref_zkk_h2o(8,7)=121.98 !O,N
-         ref_zkk_h2o(8,15)=68.85 !O,P
+         ref_zkk_h2o(8,7)=121.98_wp !O,N
+         ref_zkk_h2o(8,15)=68.85_wp !O,P
          ref_nc3=84.10_wp !Special Parameter NC3
       else
          ref_zk=0.0_wp 

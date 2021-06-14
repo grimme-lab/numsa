@@ -26,13 +26,13 @@ module smd_output
 
 contains
 
-subroutine ascii_cds(unit, mol, cds)
+subroutine ascii_cds(unit, mol, cds,cds_sm)
    !> Unit for output
    integer, intent(in) :: unit
    !> Molecular structure data
    class(structure_type), intent(in) :: mol
    !> Surface area for each atom
-   real(wp), intent(in) :: cds(:)
+   real(wp), intent(in) :: cds(:), cds_sm
 
    integer :: iat, isp
 
@@ -46,9 +46,11 @@ subroutine ascii_cds(unit, mol, cds)
       write(unit, '(i6,1x,i4,1x,a4,*(1x,f10.4))') &
          & iat, mol%num(isp), mol%sym(isp), cds(iat)/1000.0_wp
    end do
-   write(unit, '(28("-"))')
+   write(unit, '(28("-"))') 
    write(unit, '(1x, a, t15, f13.4)') &
-      "total",  sum(cds)/1000.0_wp
+      "Solvent Contribution:",  (cds_sm)/1000.0_wp
+   write(unit, '(1x, a, t15, f13.4)') &
+      "total",  (sum(cds)+cds_sm)/1000.0_wp
    write(unit, '(28("-"))')
 
 end subroutine ascii_cds

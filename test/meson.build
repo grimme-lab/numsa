@@ -31,7 +31,7 @@ mstore_dep = mstore_prj.get_variable('mstore_dep')
 
 tests = [
   'surface',
-  'cds'
+  'cds',
 ]
 
 test_srcs = files(

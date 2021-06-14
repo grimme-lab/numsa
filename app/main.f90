@@ -48,6 +48,7 @@ program main_driver
    type(smd_param) :: param
    type(smd_surft) :: surft
    real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :), cds(:)
+   real(wp) :: cds_sm
    integer :: stat, unit
    logical :: exist
 
@@ -101,8 +102,8 @@ program main_driver
    if (allocated(config%solvent)) then
       Call init_smd(param,config%solvent)
       Call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
-      Call calc_cds(surft,surface,mol%sym,mol%id,cds)
-      Call ascii_cds(output_unit,mol,cds)
+      Call calc_cds(surft,surface,mol%sym,mol%id,cds,cds_sm)
+      Call ascii_cds(output_unit,mol,cds,cds_sm)
    end if
 
 contains

@@ -27,22 +27,24 @@ module smd_cds
 
    interface calc_cds
       module procedure :: calc_cds_symbol
-      module procedure :: calc_cds_number
+      ! module procedure :: calc_cds_number
    end interface
 
 contains
 
-   subroutine calc_cds_symbol(surft,surface,symbols,id,cds)
+   subroutine calc_cds_symbol(surft,surface,symbols,id,cds,cds_sm)
       !>smd Surface Tensions per Atom and for the Solvent
-      type(smd_surft) :: surft
+      type(smd_surft), INTENT(IN) :: surft
       !>SASA Surface per Atom
-      real(wp) :: surface(:)
+      real(wp), INTENT(IN) :: surface(:)
       !>Identifiers per unique species as Symbols
-      character(len=*) :: symbols(:)
-      !>CDS Part of the Energy
-      real(wp),allocatable :: cds(:)
+      character(len=*), INTENT(IN) :: symbols(:)
+      !>CDS Part of the Energy per Atom
+      real(wp),allocatable, INTENT(OUT) :: cds(:)
+      !> Solvent Contribution to CDS
+      real(wp), INTENT(OUT) :: cds_sm
       !>ID of the unique species of Atom
-      integer :: id(:)
+      integer,INTENT(IN) :: id(:)
 
       !> Laufvariable
       integer :: i
@@ -56,36 +58,37 @@ contains
       end do
 
       cds=0.0_wp
+      cds_sm=surft%sm*sum(surface)
       do i=1,size(id)
          cds(i)=surft%sk(Z(i))*surface(i)*autoaa**2
       end do
 
    end subroutine calc_cds_symbol
          
-   subroutine calc_cds_number(surft,surface,numbers,cds)
-      !>smd Surface Tensions per Atom and for the Solvent
-      type(smd_surft) :: surft
-      !>SASA Surface per Atom
-      real(wp) :: surface(:)
-      !>Identifiers per Atom as Numbers
-      integer :: numbers(:)
-      !>CDS Part of the Energy
-      real(wp) :: cds
+   ! subroutine calc_cds_number(surft,surface,numbers,cds)
+   !    !>smd Surface Tensions per Atom and for the Solvent
+   !    type(smd_surft) :: surft
+   !    !>SASA Surface per Atom
+   !    real(wp) :: surface(:)
+   !    !>Identifiers per Atom as Numbers
+   !    integer :: numbers(:)
+   !    !>CDS Part of the Energy
+   !    real(wp) :: cds
 
-      !>CDS Part of the Energy per Atom
-      real(wp) :: atom_cds(size(surface))
-      !> Laufvariable
-      integer :: i
+   !    !>CDS Part of the Energy per Atom
+   !    real(wp) :: atom_cds(size(surface))
+   !    !> Laufvariable
+   !    integer :: i
 
-      cds=0.0_wp
-      atom_cds=0.0_wp
+   !    cds=0.0_wp
+   !    atom_cds=0.0_wp
 
-      do concurrent (i=1:size(surface))
-         atom_cds(i)=surft%sk(numbers(i))*surface(i)*autoaa**2
-      end do
+   !    do concurrent (i=1:size(surface))
+   !       atom_cds(i)=surft%sk(numbers(i))*surface(i)*autoaa**2
+   !    end do
 
-      cds=sum(atom_cds)+surft%sm*sum(surface)
-   end subroutine calc_cds_number
+   !    cds=sum(atom_cds)+surft%sm*sum(surface)
+   ! end subroutine calc_cds_number
 
 
 end module smd_cds
