@@ -212,22 +212,22 @@ contains
 
       Inquire(file="smd_h2o",exist=ex)
       if (ex) then
-         write(*,*) "Using smd_h2o from working directory."
+         ! write(*,*) "Using smd_h2o from working directory."
          Call read_smd("smd_h2o",ref_zk_h2o,ref_zkk_h2o,ref_rzkk,ref_drzkk,&
                &ref_nc3,ref_rnc3,ref_drnc3)
       else
          if (present(hd)) then
             Inquire(file=hd//"smd_h2o",exist=ex)
                if (ex) then
-                  write(*,*) "Using smd_h2o from home directory: "//hd//"."
+                  ! write(*,*) "SMD Parameter directory: "//hd//"."
                   Call read_smd(hd//"smd_h2o",ref_zk_h2o,ref_zkk_h2o,ref_rzkk,ref_drzkk,&
                   &ref_nc3,ref_rnc3,ref_drnc3)
                else
-                  write(*,*) "Using default SMD Parameters."
+                  ! write(*,*) "Using default SMD Parameters."
                   Call init_default(.TRUE.)
                end if
          else
-            write(*,*) "Using default SMD Parameters."
+            ! write(*,*) "Using default SMD Parameters."
             Call init_default(.TRUE.)
          end if
       end if
@@ -261,22 +261,22 @@ contains
 
       Inquire(file="smd_ot",exist=ex)
       if (ex) then
-         write(*,*) "Using smd_ot from working directory."
+         ! write(*,*) "Using smd_ot from working directory."
             Call read_smd(hd//"smd_ot",ref_zk,ref_zkk,ref_rzkk,ref_drzkk,&
                &ref_nc3,ref_rnc3,ref_drnc3,ref_sg,ref_sr2,ref_sp2,ref_sb2)
       else
          if (present(hd)) then
             Inquire(file=hd//"smd_ot",exist=ex)
                if (ex) then
-                  write(*,*) "Using smd_ot from home directory: "//hd//"."
+                  ! write(*,*) "Using smd_ot from home directory: "//hd//"."
                   Call read_smd(hd//"smd_ot",ref_zk,ref_zkk,ref_rzkk,ref_drzkk,&
                      &ref_nc3,ref_rnc3,ref_drnc3,ref_sg,ref_sr2,ref_sp2,ref_sb2)
                else
-                  write(*,*) "Using default SMD Parameters."
+                  ! write(*,*) "Using default SMD Parameters."
                   Call init_default(.TRUE.)
                end if
          else
-            write(*,*) "Using default SMD Parameters."
+            ! write(*,*) "Using default SMD Parameters."
             Call init_default(.TRUE.)
          end if
       end if
