@@ -23,11 +23,16 @@ program main_driver
    use numsa, only : get_numsa_version, surface_integrator, new_surface_integrator, &
       & get_vdw_rad_d3, get_vdw_rad_cosmo, get_vdw_rad_bondi
    use numsa_output, only : ascii_surface_area
+   use smd_init, only: smd_param, init_smd
+   use smd_sigma, only: smd_surft, calc_surft
+   use smd_cds, only: calc_cds
+   use smd_output, only: ascii_cds
    implicit none
    character(len=*), parameter :: prog_name = "numsa"
 
    type :: driver_config
       character(len=:), allocatable :: input
+      character(len=:), allocatable :: solvent
       integer, allocatable :: input_format
       integer, allocatable :: grid_size
       real(wp), allocatable :: probe
@@ -40,7 +45,10 @@ program main_driver
    type(structure_type) :: mol
    type(error_type), allocatable :: error
    type(surface_integrator) :: sasa
-   real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :)
+   type(smd_param) :: param
+   type(smd_surft) :: surft
+   real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :), cds(:)
+   real(wp) :: cds_sm
    integer :: stat, unit
    logical :: exist
 
@@ -90,6 +98,13 @@ program main_driver
    call sasa%get_surface(mol%id, mol%xyz, surface, dsdr)
 
    call ascii_surface_area(output_unit, mol, surface)
+
+   if (allocated(config%solvent)) then
+      call init_smd(param,config%solvent)
+      call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
+      call calc_cds(surft,surface,mol%sym,mol%id,cds,cds_sm)
+      call ascii_cds(output_unit,mol,cds,cds_sm)
+   end if
 
 contains
 
@@ -216,6 +231,14 @@ subroutine get_arguments(config, error)
             exit
          end if
          config%input_format = get_filetype("."//arg)
+      case("-s", "--smd")
+         iarg = iarg + 1
+         call get_argument(iarg, arg)
+         if (.not.allocated(arg)) then
+            call fatal_error(error, "Missing argument for Solvent")
+            exit
+         end if
+         config%solvent = arg
       case("--rad-type")
          iarg = iarg + 1
          call get_argument(iarg, arg)

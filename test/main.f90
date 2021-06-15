@@ -21,6 +21,7 @@ program tester
    use mctc_env_testing, only : run_testsuite, new_testsuite, testsuite_type, &
       & select_suite, run_selected
    use test_surface, only : collect_surface
+   use test_cds, only: collect_cds
    implicit none
    integer :: stat, is
    character(len=:), allocatable :: suite_name, test_name
@@ -30,7 +31,8 @@ program tester
    stat = 0
 
    testsuites = [ &
-      new_testsuite("surface", collect_surface) &
+      new_testsuite("surface", collect_surface), &
+      new_testsuite("cds", collect_cds) &
       ]
 
    call get_argument(1, suite_name)
