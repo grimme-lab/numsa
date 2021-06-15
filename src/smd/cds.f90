@@ -34,17 +34,17 @@ contains
 
    subroutine calc_cds_symbol(surft,surface,symbols,id,cds,cds_sm)
       !>smd Surface Tensions per Atom and for the Solvent
-      type(smd_surft), INTENT(IN) :: surft
+      type(smd_surft), intent(in) :: surft
       !>SASA Surface per Atom
-      real(wp), INTENT(IN) :: surface(:)
+      real(wp), intent(in) :: surface(:)
       !>Identifiers per unique species as Symbols
-      character(len=*), INTENT(IN) :: symbols(:)
+      character(len=*), intent(in) :: symbols(:)
       !>CDS Part of the Energy per Atom
-      real(wp),allocatable, INTENT(OUT) :: cds(:)
+      real(wp),allocatable, intent(out) :: cds(:)
       !> Solvent Contribution to CDS
-      real(wp), INTENT(OUT) :: cds_sm
+      real(wp), intent(out) :: cds_sm
       !>ID of the unique species of Atom
-      integer,INTENT(IN) :: id(:)
+      integer,intent(in) :: id(:)
 
       !> Laufvariable
       integer :: i
