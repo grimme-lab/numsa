@@ -1,4 +1,3 @@
-
 ! This file is part of numsa.
 ! SPDX-Identifier: LGPL-3.0-or-later
 !

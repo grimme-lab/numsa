@@ -100,10 +100,10 @@ program main_driver
    call ascii_surface_area(output_unit, mol, surface)
 
    if (allocated(config%solvent)) then
-      Call init_smd(param,config%solvent)
-      Call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
-      Call calc_cds(surft,surface,mol%sym,mol%id,cds,cds_sm)
-      Call ascii_cds(output_unit,mol,cds,cds_sm)
+      call init_smd(param,config%solvent)
+      call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
+      call calc_cds(surft,surface,mol%sym,mol%id,cds,cds_sm)
+      call ascii_cds(output_unit,mol,cds,cds_sm)
    end if
 
 contains
