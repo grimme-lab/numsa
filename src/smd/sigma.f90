@@ -65,7 +65,7 @@ contains
       !> Laufvariabeln
       integer :: Z, i, j, k
       !> Temporary sigma saving
-      real(wp) :: s_temp1, s_temp2, s_temp3, s_temp4, nc_temp
+      real(wp) :: s_temp1, s_temp2, s_temp3, s_temp4, nc_temp, add_temp
       
       Call init_info(species,ident,self)
 
@@ -74,6 +74,7 @@ contains
       s_temp3=0.0_wp
       s_temp4=0.0_wp
       nc_temp=0.0_wp
+      add_temp=0.0_wp
 
       surft%sm=param%s_m
  
@@ -122,13 +123,15 @@ contains
                      do j=1, self%nat
                         select case(self%Z(j))
                            case (6) !N,C
-                              s_temp1=s_temp1+T(xyz(:,i),xyz(:,j),param%rzkk(6,6),param%drzkk(6,6))
+                              add_temp=add_temp+T(xyz(:,i),xyz(:,j),param%rzkk(6,6),param%drzkk(6,6))
                               do k=1, self%nat ! For N, all interactions between C and all other atoms play a role
                                  if ((k .NE. j) .AND. (k .NE. i)) then
                                     nc_temp=nc_temp+T(xyz(:,j),xyz(:,k),param%rzkk(6,self%Z(k)),param%drzkk(6,self%Z(k)))
                                  end if
                               end do
-                              s_temp1=s_temp1*(nc_temp**2)
+                              add_temp=add_temp*(nc_temp**2)
+                              s_temp1=s_temp1+add_temp
+                              add_temp=0.0_wp
                               nc_temp=0.0_wp
                               s_temp2=s_temp2+T(xyz(:,i),xyz(:,j),param%rnc3,param%drnc3) !Additional nc3 parametric correction
                            case default
