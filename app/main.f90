@@ -97,7 +97,7 @@ program main_driver
 
    call sasa%get_surface(mol%id, mol%xyz, surface, dsdr)
 
-   call ascii_surface_area(output_unit, mol, surface)
+   call ascii_surface_area(output_unit, mol, surface, rad(mol%id)+config%probe)
 
    if (allocated(config%solvent)) then
       call init_smd(param,config%solvent)
