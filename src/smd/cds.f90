@@ -25,45 +25,38 @@ module smd_cds
    
    public :: calc_cds
 
-   interface calc_cds
-      module procedure :: calc_cds_symbol
-      ! module procedure :: calc_cds_number
-   end interface
+   ! interface calc_cds
+   !    module procedure :: calc_cds_symbol
+   !    module procedure :: calc_cds_number
+   ! end interface
 
 contains
 
-   subroutine calc_cds_symbol(surft,surface,symbols,id,cds,cds_sm)
+   subroutine calc_cds(surft,surface,cds,cds_sm)
       !>smd Surface Tensions per Atom and for the Solvent
       type(smd_surft), intent(in) :: surft
       !>SASA Surface per Atom
       real(wp), intent(in) :: surface(:)
-      !>Identifiers per unique species as Symbols
-      character(len=*), intent(in) :: symbols(:)
       !>CDS Part of the Energy per Atom
       real(wp),allocatable, intent(out) :: cds(:)
       !> Solvent Contribution to CDS
       real(wp), intent(out) :: cds_sm
-      !>ID of the unique species of Atom
-      integer,intent(in) :: id(:)
-
+      
       !> Laufvariable
       integer :: i
-      !>Atomic Number of Atom i
-      integer :: Z(size(id))
+      !> Number of Atoms
+      integer :: nat
 
-      allocate(cds(size(surface)))
-
-      do i=1,size(id)
-         Z(i)=to_number(symbols(id(i)))
-      end do
+      nat=size(surface)
+      allocate(cds(nat))
 
       cds=0.0_wp
-      cds_sm=surft%sm*sum(surface)
-      do i=1,size(id)
-         cds(i)=surft%sk(Z(i))*surface(i)*autoaa**2
+      cds_sm=surft%sm*sum(surface)*autoaa**2
+      do i=1,nat
+         cds(i)=surft%sk(i)*surface(i)*autoaa**2
       end do
 
-   end subroutine calc_cds_symbol
+   end subroutine calc_cds
          
    ! subroutine calc_cds_number(surft,surface,numbers,cds)
    !    !>smd Surface Tensions per Atom and for the Solvent

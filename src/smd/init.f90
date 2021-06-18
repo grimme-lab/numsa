@@ -136,6 +136,8 @@ contains
       select case(solvent)
          case('h2o', 'water')
             Call init_smd_h2o(param)
+         case('orcamet')
+            Call init_smd_ot(param,1.3442_wp,0.0700_wp,0.3200_wp,41.25_wp,0.0_wp,0.0_wp)
          case('methanol','ch4')
             Call init_smd_ot(param,1.3314_wp,0.43_wp,0.47_wp,32.3847_wp,0.0_wp,0.0_wp)
          case('dmso','DMSO')

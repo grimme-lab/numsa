@@ -83,6 +83,9 @@ program main_driver
       rad = get_vdw_rad_d3(mol%num)
    case("bondi")
       rad = get_vdw_rad_bondi(mol%num)
+   case("smd")
+      rad = get_vdw_rad_bondi(mol%num)
+      rad = rad+0.4
    case("cosmo")
       rad = get_vdw_rad_cosmo(mol%num)
    end select
@@ -102,7 +105,7 @@ program main_driver
    if (allocated(config%solvent)) then
       call init_smd(param,config%solvent)
       call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
-      call calc_cds(surft,surface,mol%sym,mol%id,cds,cds_sm)
+      call calc_cds(surft,surface,cds,cds_sm)
       call ascii_cds(output_unit,mol,cds,cds_sm)
    end if
 
