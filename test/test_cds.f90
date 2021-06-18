@@ -62,7 +62,7 @@ subroutine test_mb01(error)
    real(wp), parameter :: probe = 1.4_wp * aatoau
    integer, parameter :: nang = 110
    real(wp), parameter :: ref_h2o = 7.01825864667078E+3_wp
-   real(wp), parameter :: ref_methanol = 1.08787565625528E+4_wp
+   real(wp), parameter :: ref_methanol = 3.23260916008426E+3_wp
    call get_structure(mol, "MB16-43", "01")
 
    allocate(surface(mol%nat), dsdr(3, mol%nat, mol%nat))
@@ -101,7 +101,7 @@ subroutine test_mb02(error)
    real(wp), parameter :: probe = 1.2_wp * aatoau
    integer, parameter :: nang = 230
    real(wp), parameter :: ref_h2o = 3.58283179205683E+3_wp
-   real(wp), parameter :: ref_dmso = 1.56694614566661E+4_wp
+   real(wp), parameter :: ref_dmso = 1.18230982156062E+3_wp
    call get_structure(mol, "MB16-43", "02")
 
    allocate(surface(mol%nat), dsdr(3, mol%nat, mol%nat))
@@ -141,7 +141,7 @@ subroutine test_mb03(error)
    integer, parameter :: nang = 111
       
    real(wp), parameter :: ref_h2o = 1.84531525001789E+3_wp
-   real(wp), parameter :: ref_acetonitrile = 3.03680815619881E+3_wp
+   real(wp), parameter :: ref_acetonitrile = -8.42479941377139E+2_wp
    call get_structure(mol, "MB16-43", "02")
 
    allocate(surface(mol%nat), dsdr(3, mol%nat, mol%nat))
@@ -179,7 +179,7 @@ subroutine t_cds(mol,surface,solvent,cds_total)
 
    Call init_smd(param,solvent,"test/")
    Call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
-   Call calc_cds(surft,surface,mol%sym,mol%id,cds,cds_sm)
+   Call calc_cds(surft,surface,cds,cds_sm)
 
    cds_total=sum(cds)+cds_sm
 
