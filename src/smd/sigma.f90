@@ -40,7 +40,7 @@ module smd_sigma
 
    type :: smd_surft
       !> Atom depended surface tension
-      real(wp) :: sk(max_elem)
+      real(wp), allocatable :: sk(:)
       !> Solvent depended molecular surface tension
       real(wp) :: sm
    end type
@@ -63,12 +63,12 @@ contains
       !> Needed Info for smd
       type(smd_info) :: self
       !> Laufvariabeln
-      integer :: Z, i, j, k
+      integer :: i, j, k
       !> Temporary sigma saving
       real(wp) :: s_temp1, s_temp2, s_temp3, s_temp4, nc_temp, add_temp
       
       Call init_info(species,ident,self)
-
+      allocate(surft%sk(self%nat))
       s_temp1=0.0_wp
       s_temp2=0.0_wp
       s_temp3=0.0_wp
@@ -79,99 +79,85 @@ contains
       surft%sm=param%s_m
  
       ! Setting up s_k Parameters now
-      do Z=1,max_elem
-         select case(Z)
+      do i=1,self%nat
+         select case(self%Z(i))
             case (1) !H
-               do i=1,self%nat
-                  if (self%Z(i) .EQ. 1) then
-                     do j=1, self%nat
-                        select case(self%Z(j))
-                           case (6) !H,C
-                              s_temp1=s_temp1+T(xyz(:,i),xyz(:,j),param%rzkk(1,6),param%drzkk(1,6))
-                           case (8) !H,O
-                              s_temp2=s_temp2+T(xyz(:,i),xyz(:,j),param%rzkk(1,8),param%drzkk(1,8))
-                           case default
-                              cycle
-                        end select
-                     end do
-                  end if
+               do j=1, self%nat
+                  select case(self%Z(j))
+                     case (6) !H,C
+                        s_temp1=s_temp1+T(xyz(:,i),xyz(:,j),param%rzkk(1,6),param%drzkk(1,6))
+                     case (8) !H,O
+                        s_temp2=s_temp2+T(xyz(:,i),xyz(:,j),param%rzkk(1,8),param%drzkk(1,8))
+                     case default
+                        cycle
+                  end select
                end do
-               surft%sk(1)=param%zk(1)+param%zkk(1,6)*s_temp1+param%zkk(1,8)*s_temp2
+               surft%sk(i)=param%zk(1)+param%zkk(1,6)*s_temp1+param%zkk(1,8)*s_temp2
                s_temp1=0.0_wp
                s_temp2=0.0_wp
             case (6) !C
-               do i=1,self%nat
-                  if (self%Z(i) .EQ. 6) then
-                     do j=1, self%nat
-                        select case(self%Z(j))
-                           case (6) !C,C
-                              if (i .NE. j) s_temp1=s_temp1+T(xyz(:,i),xyz(:,j),param%rzkk(6,6),param%drzkk(6,6))
-                           case (7) !C,N
-                              s_temp2=s_temp2+T(xyz(:,i),xyz(:,j),param%rzkk(6,7),param%drzkk(6,7))
-                           case default
-                              cycle
-                        end select
-                     end do
-                  end if
+               do j=1, self%nat
+                  select case(self%Z(j))
+                     case (6) !C,C
+                        if (i .NE. j) then
+                           s_temp1=s_temp1+T(xyz(:,i),xyz(:,j),param%rzkk(6,6),param%drzkk(6,6))
+                        end if
+                     case (7) !C,N
+                        s_temp2=s_temp2+T(xyz(:,i),xyz(:,j),param%rzkk(6,7),param%drzkk(6,7))
+                     case default
+                        cycle
+                  end select
                end do
-               surft%sk(6)=param%zk(6)+param%zkk(6,6)*s_temp1+param%zkk(6,7)*(s_temp2**2)
+               surft%sk(i)=param%zk(6)+param%zkk(6,6)*s_temp1+param%zkk(6,7)*(s_temp2**2)
                s_temp1=0.0_wp
                s_temp2=0.0_wp
             case(7) !N
-               do i=1,self%nat
-                  if (self%Z(i) .EQ. 7) then
-                     do j=1, self%nat
-                        select case(self%Z(j))
-                           case (6) !N,C
-                              add_temp=add_temp+T(xyz(:,i),xyz(:,j),param%rzkk(6,6),param%drzkk(6,6))
-                              do k=1, self%nat ! For N, all interactions between C and all other atoms play a role
-                                 if ((k .NE. j) .AND. (k .NE. i)) then
-                                    nc_temp=nc_temp+T(xyz(:,j),xyz(:,k),param%rzkk(6,self%Z(k)),param%drzkk(6,self%Z(k)))
-                                 end if
-                              end do
-                              add_temp=add_temp*(nc_temp**2)
-                              s_temp1=s_temp1+add_temp
-                              add_temp=0.0_wp
-                              nc_temp=0.0_wp
-                              s_temp2=s_temp2+T(xyz(:,i),xyz(:,j),param%rnc3,param%drnc3) !Additional nc3 parametric correction
-                           case default
-                              cycle
-                        end select
-                     end do
-                  end if
+               do j=1, self%nat
+                  select case(self%Z(j))
+                     case (6) !N,C
+                        add_temp=add_temp+T(xyz(:,i),xyz(:,j),param%rzkk(6,6),param%drzkk(6,6))
+                        do k=1, self%nat ! For N, all interactions between C and all other atoms play a role
+                           if ((k .NE. j) .AND. (k .NE. i)) then
+                              nc_temp=nc_temp+T(xyz(:,j),xyz(:,k),param%rzkk(6,self%Z(k)),param%drzkk(6,self%Z(k)))
+                           end if
+                        end do
+                        add_temp=add_temp*(nc_temp**2)
+                        s_temp1=s_temp1+add_temp
+                        add_temp=0.0_wp
+                        nc_temp=0.0_wp
+                        s_temp2=s_temp2+T(xyz(:,i),xyz(:,j),param%rnc3,param%drnc3) !Additional nc3 parametric correction
+                     case default
+                        cycle
+                  end select
                end do
-               surft%sk(7)=param%zk(7)+param%zkk(7,6)*(s_temp1**1.3_wp)+param%nc3*s_temp2
+               surft%sk(i)=param%zk(7)+param%zkk(7,6)*(s_temp1**1.3_wp)+param%nc3*s_temp2
                s_temp1=0.0_wp
                s_temp2=0.0_wp
             case(8) !O
-               do i=1,self%nat
-                  if (self%Z(i) .EQ. 8) then
-                     do j=1, self%nat
-                        select case(self%Z(j))
-                           case (6) !O,C
-                              s_temp1=s_temp1+T(xyz(:,i),xyz(:,j),param%rzkk(8,6),param%drzkk(8,6))
-                           case (7) !O,N
-                              s_temp2=s_temp2+T(xyz(:,i),xyz(:,j),param%rzkk(8,7),param%drzkk(8,7))
-                           case (8) !O,O
-                              if (i .NE. j) s_temp3=s_temp3+T(xyz(:,i),xyz(:,j),param%rzkk(8,8),param%drzkk(8,8))
-                           case (15) !O,P
-                              s_temp4=s_temp4+T(xyz(:,i),xyz(:,j),param%rzkk(8,15),param%drzkk(8,15))
-                           case default
-                              cycle
-                        end select
-                     end do
-                  end if
+               do j=1, self%nat
+                  select case(self%Z(j))
+                     case (6) !O,C
+                        s_temp1=s_temp1+T(xyz(:,i),xyz(:,j),param%rzkk(8,6),param%drzkk(8,6))
+                     case (7) !O,N
+                        s_temp2=s_temp2+T(xyz(:,i),xyz(:,j),param%rzkk(8,7),param%drzkk(8,7))
+                     case (8) !O,O
+                        if (i .NE. j) s_temp3=s_temp3+T(xyz(:,i),xyz(:,j),param%rzkk(8,8),param%drzkk(8,8))
+                     case (15) !O,P
+                        s_temp4=s_temp4+T(xyz(:,i),xyz(:,j),param%rzkk(8,15),param%drzkk(8,15))
+                     case default
+                        cycle
+                  end select
                end do
-               surft%sk(8)=param%zk(8)+param%zkk(8,6)*s_temp1+param%zkk(8,7)&
+               surft%sk(i)=param%zk(8)+param%zkk(8,6)*s_temp1+param%zkk(8,7)&
                   &*s_temp2+param%zkk(8,8)*s_temp3+param%zkk(8,15)*s_temp4
                s_temp1=0.0_wp
                s_temp2=0.0_wp
                s_temp3=0.0_wp
                s_temp4=0.0_wp
             case(9,14,16,17,35) !F, Si, S, Cl, Br
-               surft%sk(Z)=param%zk(Z)
+               surft%sk(i)=param%zk(self%Z(i))
             case default
-               surft%sk(Z)=0.0_wp !The default case for the surface tension is zero
+               surft%sk(i)=0.0_wp !The default case for the surface tension is zero
          end select
       end do
 

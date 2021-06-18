@@ -179,7 +179,7 @@ subroutine t_cds(mol,surface,solvent,cds_total)
 
    Call init_smd(param,solvent,"test/")
    Call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
-   Call calc_cds(surft,surface,mol%sym,mol%id,cds,cds_sm)
+   Call calc_cds(surft,surface,cds,cds_sm)
 
    cds_total=sum(cds)+cds_sm
 
