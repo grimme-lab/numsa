@@ -18,6 +18,7 @@
 module numsa_output
    use mctc_env, only : wp
    use mctc_io, only : structure_type
+   use mctc_io_constants, only : pi
    use mctc_io_convert, only : autoaa
    implicit none
    private
@@ -26,30 +27,33 @@ module numsa_output
 
 contains
 
-subroutine ascii_surface_area(unit, mol, surface)
+subroutine ascii_surface_area(unit, mol, surface, rad)
    !> Unit for output
    integer, intent(in) :: unit
    !> Molecular structure data
    class(structure_type), intent(in) :: mol
    !> Surface area for each atom
    real(wp), intent(in) :: surface(:)
+   !> Actual radii
+   real(wp), intent(in) :: rad(:)
 
    integer :: iat, isp
 
    write(unit, '(a)')
    write(unit, '(a,":")') "Surface area in Å²"
-   write(unit, '(28("-"))')
-   write(unit, '(a6,1x,a4,5x,*(1x,a10))') "#", "Z", "area"
-   write(unit, '(28("-"))')
+   write(unit, '(50("-"))')
+   write(unit, '(a6,1x,a4,5x,*(1x,a10))') "#", "Z", "area", "rad", "SASA/%"
+   write(unit, '(50("-"))')
    do iat = 1, mol%nat
       isp = mol%id(iat)
       write(unit, '(i6,1x,i4,1x,a4,*(1x,f10.4))') &
-         & iat, mol%num(isp), mol%sym(isp), surface(iat) * autoaa**2
+         & iat, mol%num(isp), mol%sym(isp), surface(iat) * autoaa**2, &
+         & rad(iat) * autoaa, surface(iat) / (4*pi*rad(iat)*rad(iat)) * 100
    end do
-   write(unit, '(28("-"))')
+   write(unit, '(50("-"))')
    write(unit, '(1x, a, t15, f13.4)') &
       "total",  sum(surface) * autoaa**2
-   write(unit, '(28("-"))')
+   write(unit, '(50("-"))')
 
 end subroutine ascii_surface_area
 

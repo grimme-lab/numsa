@@ -19,6 +19,7 @@ module test_surface
    use mctc_env_testing, only : new_unittest, unittest_type, error_type, check, &
       & test_failed
    use mctc_io, only : structure_type
+   use mctc_io_constants, only : pi
    use mctc_io_convert, only : aatoau
    use mstore, only : get_structure
    use numsa
@@ -57,7 +58,7 @@ subroutine test_mb01(error)
    real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :)
    real(wp), parameter :: probe = 1.4_wp * aatoau
    integer, parameter :: nang = 110
-   real(wp), parameter :: ref(16) = [&
+   real(wp), parameter :: ref(16) = 4*pi * [&
       & 1.57762257884252E+1_wp, 7.44023682724103E+0_wp, 5.78326352983607E+0_wp, &
       & 2.96273887964889E+0_wp, 7.96228449837119E+0_wp, 6.94475560013532E+0_wp, &
       & 1.39709090557345E+0_wp, 4.61011360744476E+0_wp, 7.81217049844597E-4_wp, &
@@ -90,7 +91,7 @@ subroutine test_mb02(error)
    real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :)
    real(wp), parameter :: probe = 1.2_wp * aatoau
    integer, parameter :: nang = 230
-   real(wp), parameter :: ref(16) = [&
+   real(wp), parameter :: ref(16) = 4*pi * [&
       & 2.27659153452265E+0_wp, 5.97577009756815E+0_wp, 6.41298531564733E+0_wp, &
       & 6.55734382952262E+0_wp, 5.15770714137722E+0_wp, 1.57234609721010E+0_wp, &
       & 3.90432810917537E+0_wp, 4.21140518928471E+0_wp, 7.27814416367210E+0_wp, &
@@ -123,7 +124,7 @@ subroutine test_mb03(error)
    real(wp), allocatable :: rad(:), surface(:), dsdr(:, :, :)
    real(wp), parameter :: probe = 0.2_wp * aatoau
    integer, parameter :: nang = 111
-   real(wp), parameter :: ref(16) = [&
+   real(wp), parameter :: ref(16) = 4*pi * [&
       & 3.92672838745645E+0_wp, 4.31618518252200E+0_wp, 2.05344924554658E+0_wp, &
       & 2.60133065338031E+0_wp, 1.01849685835522E+0_wp, 7.52651997890806E+0_wp, &
       & 2.73374455863003E+0_wp, 2.19905522537305E+0_wp, 2.18761474083904E+0_wp, &

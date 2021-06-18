@@ -17,6 +17,7 @@
 !> Integration of surface area
 module numsa_surface
    use mctc_env, only : wp
+   use mctc_io_constants, only : pi
    use mctc_io_convert, only : aatoau
    use numsa_search, only : list_bisection
    use numsa_lebedev, only : get_angular_grid, grid_size
@@ -140,6 +141,7 @@ subroutine new_surface_integrator(self, num, rad, probe, nang, offset, smoothing
    allocate(self%ang_grid(3, grid_size(iang)))
    allocate(self%ang_weight(grid_size(iang)))
    call get_angular_grid(iang, self%ang_grid, self%ang_weight, ierr)
+   self%ang_weight(:) = self%ang_weight * 4*pi
 
 end subroutine new_surface_integrator
 
