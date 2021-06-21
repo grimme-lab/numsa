@@ -176,19 +176,19 @@ contains
 
       select case(solvent)
          case('h2o', 'water')
-            Call init_smd_h2o(param,hd)
+            Call init_smd_h2o(param,trim(hd))
          case('methanol','ch4')
-            Call init_smd_ot(param,1.3314_wp,0.43_wp,0.47_wp,32.3847_wp,0.0_wp,0.0_wp,hd)
+            Call init_smd_ot(param,1.3314_wp,0.43_wp,0.47_wp,32.3847_wp,0.0_wp,0.0_wp,trim(hd))
          case('dmso','DMSO')
-            Call init_smd_ot(param,1.4772_wp,0.0_wp,0.88_wp,62.6680_wp,0.0_wp,0.0_wp,hd)
+            Call init_smd_ot(param,1.4772_wp,0.0_wp,0.88_wp,62.6680_wp,0.0_wp,0.0_wp,trim(hd))
          case('acetonitrile')
-            Call init_smd_ot(param,1.3421_wp,0.07_wp,0.32_wp,28.4000_wp,0.0_wp,0.0_wp,hd)
+            Call init_smd_ot(param,1.3421_wp,0.07_wp,0.32_wp,28.4000_wp,0.0_wp,0.0_wp,trim(hd))
          case default
             INQUIRE(file=solvent//".prop",exist=ex)
             if (ex) then
                write(*,*) 'Reading self defined solvent properties for ', solvent,'.'
                Call read_smd(solvent//".prop",n,alpha,beta,msurft,arom,fclbr)
-               Call init_smd_ot(param,n,alpha,beta,msurft,arom,fclbr,hd)
+               Call init_smd_ot(param,n,alpha,beta,msurft,arom,fclbr,trim(hd))
             else
                write(*,*) 'No Solvent Properties for ', solvent, '.'
                stop
@@ -210,7 +210,6 @@ contains
 
       !> Is there a self defined Parameter file?
       logical :: ex
-
 
       Inquire(file="smd_h2o",exist=ex)
       if (ex) then
