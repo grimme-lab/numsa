@@ -42,7 +42,7 @@ contains
          &nc3,rnc3,drnc3,sg,sr,sp,sb
 
       !> read line
-      character(len=100) :: line, lines(max_elem) 
+      character(len=200) :: line, lines(max_elem) 
       !> read Symbol
       character(len=2) :: symbol, dumsymb
       integer, allocatable :: symbol_id(:)
@@ -295,7 +295,7 @@ contains
          &,drzkk(max_elem,max_elem),nc3,rnc3,drnc3
 
       !> read line
-      character(len=100) :: line, lines(max_elem) 
+      character(len=200) :: line, lines(max_elem) 
       !> read Symbol
       character(len=2) :: symbol, dumsymb
       integer, allocatable :: symbol_id(:)
