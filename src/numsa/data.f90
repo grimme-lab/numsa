@@ -22,7 +22,8 @@ module numsa_data
    implicit none
    private
 
-   public :: get_vdw_rad_d3, get_vdw_rad_cosmo, get_vdw_rad_bondi
+   public :: get_vdw_rad_d3, get_vdw_rad_cosmo, get_vdw_rad_bondi&
+     &, get_vdw_rad_smd
 
 
   !> In case no van-der-Waals value is provided
@@ -122,6 +123,38 @@ module numsa_data
       & missing, missing, missing, missing, missing, missing, missing, missing, &  ! Ta-Hg
       & 1.96_wp, 2.02_wp, 2.07_wp, 1.97_wp, 2.02_wp, 2.20_wp, 3.48_wp, 2.83_wp]    ! Tl-Ra
 
+
+
+  !> Get smd radius for a species
+  interface get_vdw_rad_smd
+    module procedure :: get_vdw_rad_smd_Symbol
+    module procedure :: get_vdw_rad_smd_Number
+  end interface get_vdw_rad_smd
+
+  !> Van-der-Waals radii from
+  !> Manjeera Mantina, Adam C. Chamberlin, Rosendo Valero, Christopher J. Cramer,
+  !> and Donald G. Truhlar, Consistent van der Waals Radii for the Whole Main Group,
+  !> J. Phys. Chem. A 2009, 113, 19, 5806–5812. https://doi.org/10.1021/jp8111556
+
+  !> SMD Radii (H, C, N, O, F, Si, P, S, Cl, Br) are from
+  !> Aleksandr V. Marenich, Christopher J. Cramer and Donald G. Truhlar
+  !> J. Phys. Chem. B 2009, 113, 18, 6378–6396.  https://doi.org/10.1021/jp810292n> 
+
+  !> Default value for missing bondi radii 
+  real(wp), parameter :: smdstub = 2.000_wp
+
+  real(wp), parameter :: vdw_rad_smd(88) = aatoau * [ &
+      & 1.20_wp, 1.40_wp, 1.81_wp, 1.53_wp, 1.92_wp, 1.85_wp, 1.89_wp, 1.52_wp, &  ! H-O
+      & 1.73_wp, 1.54_wp, 2.27_wp, 1.73_wp, 1.84_wp, 2.47_wp, 2.12_wp, 2.49_wp, &  ! F-S
+      & 2.38_wp, 1.88_wp, 2.75_wp, 2.31_wp, smdstub, smdstub, smdstub, smdstub, &  ! Cl-Cr
+      & smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, 1.87_wp, 2.11_wp, &  ! Mn-Ge
+      & 1.85_wp, 1.90_wp, 3.06_wp, 2.02_wp, 3.03_wp, 2.49_wp, smdstub, smdstub, &  ! As-Zr
+      & smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, &  ! Nb-Cd
+      & 1.93_wp, 2.17_wp, 2.06_wp, 2.06_wp, 1.98_wp, 2.16_wp, 3.43_wp, 2.68_wp, &  ! I-Ba
+      & smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, &  ! La-Gd
+      & smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, &  ! Tb-Hf
+      & smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, smdstub, &  ! Ta-Hg
+      & 1.96_wp, 2.02_wp, 2.07_wp, 1.97_wp, 2.02_wp, 2.20_wp, 3.48_wp, 2.83_wp]    ! Tl-Ra
 contains
 
 !> Get van-der-Waals radius for species with a given symbol
@@ -201,5 +234,31 @@ elemental function get_vdw_rad_bondi_number(number) result(radius)
    end if
 
 end function get_vdw_rad_bondi_number
+
+!> Get smd radius for species with a given symbol
+elemental function get_vdw_rad_smd_symbol(symbol) result(radius)
+   !> Element symbol
+   character(len=*), intent(in) :: symbol
+   !> van-der-Waals radius
+   real(wp) :: radius
+
+   radius = get_vdw_rad_smd(to_number(symbol))
+
+end function get_vdw_rad_smd_symbol
+
+!> Get smd radius for species with a given atomic number
+elemental function get_vdw_rad_smd_number(number) result(radius)
+   !> Atomic number
+   integer, intent(in) :: number
+   !> van-der-Waals radius
+   real(wp) :: radius
+
+   if (number > 0 .and. number <= size(vdw_rad_smd, dim=1)) then
+      radius = vdw_rad_smd(number)
+   else
+      radius = missing
+   end if
+
+end function get_vdw_rad_smd_number
 
 end module numsa_data

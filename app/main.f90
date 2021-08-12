@@ -21,7 +21,7 @@ program main_driver
       & filetype, get_filetype, to_symbol
    use mctc_io_convert, only : aatoau
    use numsa, only : get_numsa_version, surface_integrator, new_surface_integrator, &
-      & get_vdw_rad_d3, get_vdw_rad_cosmo, get_vdw_rad_bondi
+      & get_vdw_rad_d3, get_vdw_rad_cosmo, get_vdw_rad_bondi, get_vdw_rad_smd
    use numsa_output, only : ascii_surface_area
    use smd_init, only: smd_param, init_smd
    use smd_sigma, only: smd_surft, calc_surft
@@ -84,8 +84,7 @@ program main_driver
    case("bondi")
       rad = get_vdw_rad_bondi(mol%num)
    case("smd")
-      rad = get_vdw_rad_bondi(mol%num)
-      rad = rad+0.4
+      rad = get_vdw_rad_smd(mol%num)
    case("cosmo")
       rad = get_vdw_rad_cosmo(mol%num)
    end select
