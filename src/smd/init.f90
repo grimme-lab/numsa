@@ -89,6 +89,7 @@ module smd_init
       real(wp) :: drnc3
       !> Additional Parameters for Solvent Surface Tension
       real(wp) :: s_m !Macroscopic Solvent Surface Tension
+      real(wp) :: alpha
    end type smd_param
 
  
@@ -578,7 +579,7 @@ contains
          end if
       end if
 
-      
+      param%alpha=0.82_wp ! Alpha is needed for O-Radius scaling 
       param%zk(:)=ref_zk_h2o
       param%zkk(:,:)=ref_zkk_h2o
       param%rzkk=ref_rzkk
@@ -639,6 +640,7 @@ contains
       param%nc3=ref_nc3
       param%rnc3=ref_rnc3
       param%drnc3=ref_drnc3
+      param%alpha=alpha ! Alpha is needed for O Radius scaling
 
    end subroutine init_smd_ot
 
