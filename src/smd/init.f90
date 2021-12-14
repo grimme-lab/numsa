@@ -569,8 +569,14 @@ contains
                   Call read_smd(hd//"smd_h2o",ref_zk_h2o,ref_zkk_h2o,ref_rzkk,ref_drzkk,&
                   &ref_nc3,ref_rnc3,ref_drnc3)
                else
-                  ! write(*,*) "Using default SMD Parameters."
-                  Call init_default(.TRUE.)
+                  INQUIRE(file=hd,exist=ex)
+                  if (ex) then
+                     Call read_smd(hd,ref_zk_h2o,ref_zkk_h2o,ref_rzkk,ref_drzkk,&
+                     &ref_nc3,ref_rnc3,ref_drnc3)
+                  else
+                     ! write(*,*) "Using default SMD Parameters."
+                     Call init_default(.TRUE.)
+                  end if
                end if
          else
             ! write(*,*) "Using default SMD Parameters."
@@ -618,8 +624,14 @@ contains
                   Call read_smd(hd//"smd_ot",ref_zk,ref_zkk,ref_rzkk,ref_drzkk,&
                      &ref_nc3,ref_rnc3,ref_drnc3,ref_sg,ref_sr2,ref_sp2,ref_sb2)
                else
+                  INQUIRE(file=hd,exist=ex)
+                  if (ex) then
+                     Call read_smd(hd,ref_zk,ref_zkk,ref_rzkk,ref_drzkk,&
+                     &ref_nc3,ref_rnc3,ref_drnc3,ref_sg,ref_sr2,ref_sp2,ref_sb2)
+                  else
                   ! write(*,*) "Using default SMD Parameters."
-                  Call init_default(.FALSE.)
+                     Call init_default(.FALSE.)
+                  end if
                end if
          else
             ! write(*,*) "Using default SMD Parameters."
