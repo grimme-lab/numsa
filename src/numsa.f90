@@ -16,7 +16,8 @@
 
 !> Public API of the numsa library
 module numsa
-   use numsa_data, only : get_vdw_rad_d3, get_vdw_rad_cosmo, get_vdw_rad_bondi
+   use numsa_data, only : get_vdw_rad_d3, get_vdw_rad_cosmo, get_vdw_rad_bondi&
+     &, get_vdw_rad_smd
    use numsa_lebedev, only : get_angular_grid, grid_size
    use numsa_surface, only : surface_integrator, new_surface_integrator
    use numsa_version, only : get_numsa_version
