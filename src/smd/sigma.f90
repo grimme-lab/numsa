@@ -154,10 +154,12 @@ contains
                s_temp2=0.0_wp
                s_temp3=0.0_wp
                s_temp4=0.0_wp
-            case(9,14,16,17,35) !F, Si, S, Cl, Br
-               surft%sk(i)=param%zk(self%Z(i))
             case default
-               surft%sk(i)=0.0_wp !The default case for the surface tension is zero
+               surft%sk(i)=param%zk(self%Z(i)) !Default case is just using the Zk Parameter (0 for undefined)
+!            case(9,14,16,17,35) !F, Si, S, Cl, Br
+!               surft%sk(i)=param%zk(self%Z(i))
+!            case default
+!               surft%sk(i)=0.0_wp !The default case for the surface tension is zero
          end select
       end do
 
