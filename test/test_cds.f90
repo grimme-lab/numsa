@@ -61,8 +61,8 @@ subroutine test_mb01(error)
    real(wp) :: cds
    real(wp), parameter :: probe = 1.4_wp * aatoau
    integer, parameter :: nang = 110
-   real(wp), parameter :: ref_h2o = 7.01825864667078E+3_wp
-   real(wp), parameter :: ref_methanol = 3.16981249667443E+3_wp
+   real(wp), parameter :: ref_h2o = 7.01825666242813E+3_wp
+   real(wp), parameter :: ref_methanol = 3.16981152608071E+3_wp
    call get_structure(mol, "MB16-43", "01")
 
    allocate(surface(mol%nat), dsdr(3, mol%nat, mol%nat))
@@ -100,8 +100,8 @@ subroutine test_mb02(error)
    real(wp) :: cds
    real(wp), parameter :: probe = 1.2_wp * aatoau
    integer, parameter :: nang = 230
-   real(wp), parameter :: ref_h2o = 3.58283179205683E+3_wp
-   real(wp), parameter :: ref_dmso = 1.27231157387008E+3_wp
+   real(wp), parameter :: ref_h2o = 3.58282976254987E+3_wp
+   real(wp), parameter :: ref_dmso = 1.27231102159210E+3_wp
    call get_structure(mol, "MB16-43", "02")
 
    allocate(surface(mol%nat), dsdr(3, mol%nat, mol%nat))
@@ -140,8 +140,8 @@ subroutine test_mb03(error)
    real(wp), parameter :: probe = 0.2_wp * aatoau
    integer, parameter :: nang = 111
       
-   real(wp), parameter :: ref_h2o = 1.84531525001789E+3_wp
-   real(wp), parameter :: ref_acetonitrile = 2.30830790290229E+1_wp
+   real(wp), parameter :: ref_h2o = 1.84531408914288E+3_wp
+   real(wp), parameter :: ref_acetonitrile = 2.30829715019427E+1_wp
    call get_structure(mol, "MB16-43", "02")
 
    allocate(surface(mol%nat), dsdr(3, mol%nat, mol%nat))
