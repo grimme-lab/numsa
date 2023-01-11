@@ -177,7 +177,7 @@ subroutine t_cds(mol,surface,solvent,cds_total)
    real(wp), allocatable :: cds(:), surface(:)
    real(wp) :: cds_sm, cds_total
 
-   Call init_smd(param,solvent,"test/")
+   Call init_smd(param,solvent)
    Call calc_surft(mol%xyz,mol%id,mol%sym,param,surft)
    Call calc_cds(surft,surface,cds,cds_sm)
 
