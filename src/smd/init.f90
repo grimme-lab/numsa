@@ -89,6 +89,7 @@ module smd_init
       real(wp) :: drnc3
       !> Additional Parameters for Solvent Surface Tension
       real(wp) :: s_m !Macroscopic Solvent Surface Tension
+      real(wp) :: alpha
    end type smd_param
 
  
@@ -569,8 +570,14 @@ contains
                   Call read_smd(hd//"smd_h2o",ref_zk_h2o,ref_zkk_h2o,ref_rzkk,ref_drzkk,&
                   &ref_nc3,ref_rnc3,ref_drnc3)
                else
-                  ! write(*,*) "Using default SMD Parameters."
-                  Call init_default(.TRUE.)
+                  INQUIRE(file=hd,exist=ex)
+                  if (ex) then
+                     Call read_smd(hd,ref_zk_h2o,ref_zkk_h2o,ref_rzkk,ref_drzkk,&
+                     &ref_nc3,ref_rnc3,ref_drnc3)
+                  else
+                     ! write(*,*) "Using default SMD Parameters."
+                     Call init_default(.TRUE.)
+                  end if
                end if
          else
             ! write(*,*) "Using default SMD Parameters."
@@ -578,7 +585,7 @@ contains
          end if
       end if
 
-      
+      param%alpha=0.82_wp ! Alpha is needed for O-Radius scaling 
       param%zk(:)=ref_zk_h2o
       param%zkk(:,:)=ref_zkk_h2o
       param%rzkk=ref_rzkk
@@ -618,8 +625,14 @@ contains
                   Call read_smd(hd//"smd_ot",ref_zk,ref_zkk,ref_rzkk,ref_drzkk,&
                      &ref_nc3,ref_rnc3,ref_drnc3,ref_sg,ref_sr2,ref_sp2,ref_sb2)
                else
+                  INQUIRE(file=hd,exist=ex)
+                  if (ex) then
+                     Call read_smd(hd,ref_zk,ref_zkk,ref_rzkk,ref_drzkk,&
+                     &ref_nc3,ref_rnc3,ref_drnc3,ref_sg,ref_sr2,ref_sp2,ref_sb2)
+                  else
                   ! write(*,*) "Using default SMD Parameters."
-                  Call init_default(.FALSE.)
+                     Call init_default(.FALSE.)
+                  end if
                end if
          else
             ! write(*,*) "Using default SMD Parameters."
@@ -639,6 +652,7 @@ contains
       param%nc3=ref_nc3
       param%rnc3=ref_rnc3
       param%drnc3=ref_drnc3
+      param%alpha=alpha ! Alpha is needed for O Radius scaling
 
    end subroutine init_smd_ot
 

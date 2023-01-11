@@ -59,12 +59,12 @@ subroutine test_mb01(error)
    real(wp), parameter :: probe = 1.4_wp * aatoau
    integer, parameter :: nang = 110
    real(wp), parameter :: ref(16) = 4*pi * [&
-      & 1.57762257884252E+1_wp, 7.44023682724103E+0_wp, 5.78326352983607E+0_wp, &
-      & 2.96273887964889E+0_wp, 7.96228449837119E+0_wp, 6.94475560013532E+0_wp, &
-      & 1.39709090557345E+0_wp, 4.61011360744476E+0_wp, 7.81217049844597E-4_wp, &
-      & 8.37602325360240E+0_wp, 5.27091803232173E+0_wp, 1.15343158333901E+1_wp, &
-      & 2.65268867545965E+0_wp, 4.61347534035499E+0_wp, 5.32574658431686E-1_wp, &
-      & 3.87132091420996E+0_wp]
+      & 1.57762308784207E+1_wp, 7.44023828473916E+0_wp, 5.78326430494107E+0_wp, &
+      & 2.96273853143212E+0_wp, 7.96228620441620E+0_wp, 6.94475617383051E+0_wp, &
+      & 1.39709036162651E+0_wp, 4.61011426631971E+0_wp, 7.81213684924535E-4_wp, &
+      & 8.37602534092320E+0_wp, 5.27091918116814E+0_wp, 1.15343190424705E+1_wp, &
+      & 2.65268998376027E+0_wp, 4.61347672833828E+0_wp, 5.32574605544628E-1_wp, &
+      & 3.87132219837450E+0_wp]
 
    call get_structure(mol, "MB16-43", "01")
 
@@ -76,7 +76,7 @@ subroutine test_mb01(error)
 
    if (any(abs(surface - ref) > thr2)) then
       call test_failed(error, "Surface area values do not match")
-      print '(es20.14e1)', surface
+      print '(es20.14e1)', surface/(4*pi)
    end if
 
 end subroutine test_mb01
@@ -92,12 +92,12 @@ subroutine test_mb02(error)
    real(wp), parameter :: probe = 1.2_wp * aatoau
    integer, parameter :: nang = 230
    real(wp), parameter :: ref(16) = 4*pi * [&
-      & 2.27659153452265E+0_wp, 5.97577009756815E+0_wp, 6.41298531564733E+0_wp, &
-      & 6.55734382952262E+0_wp, 5.15770714137722E+0_wp, 1.57234609721010E+0_wp, &
-      & 3.90432810917537E+0_wp, 4.21140518928471E+0_wp, 7.27814416367210E+0_wp, &
-      & 1.10051618677536E+0_wp, 7.17814405439378E+0_wp, 9.04904257798528E+0_wp, &
-      & 7.82899127218094E+0_wp, 4.74222917138838E+0_wp, 2.36038948903930E-1_wp, &
-      & 1.15287630553696E+1_wp]
+      & 2.27659103959728E+0_wp, 5.97577118950122E+0_wp, 6.41298824748133E+0_wp, &
+      & 6.55734631230962E+0_wp, 5.15770822160020E+0_wp, 1.57234572258234E+0_wp, &
+      & 3.90432768274610E+0_wp, 4.21140479966022E+0_wp, 7.27814781080846E+0_wp, &
+      & 1.10051545734758E+0_wp, 7.17814855288648E+0_wp, 9.04904553399203E+0_wp, &
+      & 7.82899298504117E+0_wp, 4.74222890087015E+0_wp, 2.36038439880367E-1_wp, &
+      & 1.15287664294478E+1_wp]
 
    call get_structure(mol, "MB16-43", "02")
 
@@ -109,7 +109,7 @@ subroutine test_mb02(error)
 
    if (any(abs(surface - ref) > thr2)) then
       call test_failed(error, "Surface area values do not match")
-      print '(es20.14e1)', surface
+      print '(es20.14e1)', surface/(4*pi)
    end if
 
 end subroutine test_mb02
@@ -125,12 +125,12 @@ subroutine test_mb03(error)
    real(wp), parameter :: probe = 0.2_wp * aatoau
    integer, parameter :: nang = 111
    real(wp), parameter :: ref(16) = 4*pi * [&
-      & 3.92672838745645E+0_wp, 4.31618518252200E+0_wp, 2.05344924554658E+0_wp, &
-      & 2.60133065338031E+0_wp, 1.01849685835522E+0_wp, 7.52651997890806E+0_wp, &
-      & 2.73374455863003E+0_wp, 2.19905522537305E+0_wp, 2.18761474083904E+0_wp, &
-      & 2.27442777032111E+0_wp, 6.36072952076570E+0_wp, 1.00473034014832E+1_wp, &
-      & 4.28139813443965E+0_wp, 3.31270794097678E+0_wp, 7.92536272758048E+0_wp, &
-      & 1.87822532886867E+0_wp]
+      & 3.92672956420918E+0_wp, 4.31618535417720E+0_wp, 2.05344888225025E+0_wp, &
+      & 2.60133027199439E+0_wp, 1.01849623754110E+0_wp, 7.52652188411287E+0_wp, &
+      & 2.73374452715462E+0_wp, 2.19905511071582E+0_wp, 2.18761463996078E+0_wp, &
+      & 2.27442772580975E+0_wp, 6.36073079991843E+0_wp, 1.00473063578636E+1_wp, &
+      & 4.28139986348257E+0_wp, 3.31270864378470E+0_wp, 7.92536426567952E+0_wp, &
+      & 1.87822502816429E+0_wp]
 
    call get_structure(mol, "MB16-43", "03")
 
@@ -142,7 +142,7 @@ subroutine test_mb03(error)
 
    if (any(abs(surface - ref) > thr2)) then
       call test_failed(error, "Surface area values do not match")
-      print '(es20.14e1)', surface
+      print '(es20.14e1)', surface/(4*pi)
    end if
 
 end subroutine test_mb03
