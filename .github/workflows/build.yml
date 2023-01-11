@@ -123,7 +123,7 @@ jobs:
       FC: ${{ matrix.fc }}
       CC: ${{ matrix.cc }}
       APT_PACKAGES: >-
-        intel-oneapi-compiler-fortran-2022.2.1
+        intel-oneapi-compiler-fortran
         asciidoctor
 
     steps:
