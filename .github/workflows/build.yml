@@ -5,7 +5,7 @@ on: [push, pull_request]
 env:
   BUILD_DIR: _build
   PIP_PACKAGES: >-
-    meson==0.55.3
+    meson==0.62.0
     ninja
     gcovr
 
@@ -93,7 +93,7 @@ jobs:
           mingw-w64-${{ matrix.arch }}-ninja
 
     - name: Install meson
-      run: pip3 install meson==0.55.3
+      run: pip3 install meson==0.62
 
     - name: Configure build
       run: meson setup ${{ env.BUILD_DIR }} --warnlevel=0
@@ -149,7 +149,7 @@ jobs:
         printenv >> $GITHUB_ENV
 
     - name: Install meson
-      run: pip3 install meson==0.57.1 ninja
+      run: pip3 install meson==0.62.0 ninja
 
     - name: Configure meson build
       run: >-
