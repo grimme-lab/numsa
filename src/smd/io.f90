@@ -284,6 +284,7 @@ contains
       read(1,*) sr
       read(1,*) sp
       read(1,*) sb
+      close(1)
    end subroutine read_parameters_ot
 
 
@@ -442,6 +443,7 @@ contains
       read(1,*) nc3
       read(1,*) rnc3
       read(1,*) drnc3
+      close(1)
    end subroutine read_parameters_h2o
 
    subroutine read_solvent_properties(filename,n,alpha,beta,msurft,arom,fclbr)
