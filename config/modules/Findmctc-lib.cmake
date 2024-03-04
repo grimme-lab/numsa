@@ -27,9 +27,9 @@ if(NOT DEFINED "${_pkg}_FIND_METHOD")
   set("_${_pkg}_FIND_METHOD")
 endif()
 
-include("${CMAKE_CURRENT_LIST_DIR}/xtb-utils.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/numsa-utils.cmake")
 
-xtb_find_package("${_lib}" "${${_pkg}_FIND_METHOD}" "${_url}")
+numsa_find_package("${_lib}" "${${_pkg}_FIND_METHOD}" "${_url}")
 
 if(DEFINED "_${_pkg}_FIND_METHOD")
   unset("${_pkg}_FIND_METHOD")
