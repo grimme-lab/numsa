@@ -16,7 +16,7 @@
 
 # Handling of subproject dependencies
 macro(
-  "xtb_find_package"
+  "numsa_find_package"
   package
   methods
   url
