@@ -16,15 +16,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
-        fc: [gfortran-11]
-        cc: [gcc-11]
-        include:
-          - os: ubuntu-latest
-            fc: gfortran-9
-            cc: gcc-9
-          - os: ubuntu-latest
-            fc: gfortran-10
-            cc: gcc-10
+        compiler: [gnu]
+        version: [9, 10, 11]
+
+    env:
+       FC: 'gfortran'
+       CC: 'gcc'
+       GCC_V: ${{ matrix.version }}
 
     steps:
     - name: Checkout code
