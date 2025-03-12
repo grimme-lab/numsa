@@ -17,6 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
+        build: [meson, cmake]
         compiler: [gnu]
         version: [12]
         include:
@@ -69,7 +70,8 @@ jobs:
     - name: Install meson and test dependencies
       run: pip3 install ${{ env.PIP_PACKAGES }}
 
-    - name: Configure build
+    - name: Configure build (meson)
+      if: ${{ matrix.build == 'meson' }}
       run: >-
         meson setup ${{ env.BUILD_DIR }}
         --buildtype=debug
@@ -78,17 +80,49 @@ jobs:
         --warnlevel=0
         -Db_coverage=true
 
+    - name: Configure build (CMake)
+      if: ${{ matrix.build == 'cmake' }}
+      run: >-
+        cmake -B${{ env.BUILD_DIR }}
+        -GNinja
+        -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_INSTALL_PREFIX=$PWD/_dist
+        -DCMAKE_INSTALL_LIBDIR=lib
+
+
     - name: Build library
-      run: meson compile -C ${{ env.BUILD_DIR }}
+      run: ninja -C ${{ env.BUILD_DIR }}
+
 
     - name: Run unit tests
       run: |
          meson test -C ${{ env.BUILD_DIR }} --print-errorlogs --no-rebuild --num-processes 2 -t 2
+
+    - name: Run unit tests (meson)
+      if: ${{ matrix.build == 'meson' }}
+      run: >-
+         meson test
+         -C ${{ env.BUILD_DIR }}
+         --print-errorlogs
+         --no-rebuild
+         --num-processes 2
+         -t 2
+
+    - name: Run unit tests (ctest)
+      if: ${{ matrix.build == 'cmake' }}
+      run: |
+         ctest --output-on-failure --parallel 2 
+      working-directory: ${{ env.BUILD_DIR }}
+
+    - name: Create coverage report
+      if: ${{ matrix.build == 'meson'}}
+      run:
          ninja -C ${{ env.BUILD_DIR }} coverage
 
     - name: Install project
+      if: ${{ matrix.build != 'fpm' }}
       run: |
-        meson install -C ${{ env.BUILD_DIR }} --no-rebuild
+        ninja -C ${{ env.BUILD_DIR }} install
 
 
   # Test native MinGW Windows build
